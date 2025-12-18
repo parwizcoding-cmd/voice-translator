@@ -7,12 +7,12 @@
   "theme_color": "#00E676",
   "icons": [
     {
-      "src": "https://cdn.jsdelivr.net/gh/parwizcoding-cmd/voice-translator@main/icon-192.png",
+      "src": "https://i.ibb.co/HT6qkFTX/icon192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://cdn.jsdelivr.net/gh/parwizcoding-cmd/voice-translator@main/icon-512.png",
+      "src": "https://i.ibb.co/VYrmdr5c/icon512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
