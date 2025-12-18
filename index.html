@@ -1,263 +1,176 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voice Translator</title>
+  <meta charset="UTF-8" />
+  <title>Voice Translator</title>
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#00E676">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00E676">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Tahoma, sans-serif;
-            background: #121212;
-            color: #E0E0E0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  <link rel="manifest" href="manifest.json">
 
-        h1 {
-            color: #00E676;
-            margin: 20px 0;
-            text-align: center;
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .card {
-            background: #1E1E2F;
-            width: 90%;
-            max-width: 640px;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
-            text-align: center;
-        }
+    .card {
+      background: #121212;
+      border-radius: 20px;
+      padding: 25px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+      text-align: center;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
+    h1 {
+      margin-top: 0;
+      color: #00E676;
+      font-size: 26px;
+    }
 
-        select,
-        textarea,
-        button {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            margin-top: 6px;
-            font-size: 15px;
-            box-sizing: border-box;
-        }
+    select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
 
-        textarea {
-            resize: none;
-            background: #0f0f0f;
-            color: #E0E0E0;
-            text-align: center;
-        }
+    select {
+      background: #1e1e1e;
+      color: #fff;
+    }
 
-        #sourceText {
-            text-align: right;
-            direction: rtl;
-        }
+    button {
+      background: #00E676;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform .15s ease;
+    }
 
-        #translatedText {
-            text-align: center;
-            direction: ltr;
-        }
+    button:active {
+      transform: scale(0.97);
+    }
 
-        button {
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 10px;
-        }
+    .box {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+      min-height: 60px;
+      direction: rtl;
+    }
 
-        #recordBtn {
-            background: #4A90E2;
-            color: white;
-        }
-
-        #recordBtn:hover {
-            background: #357ABD;
-        }
-
-        #stopBtn {
-            background: #D32F2F;
-            color: white;
-        }
-
-        #stopBtn:hover {
-            background: #B71C1C;
-        }
-
-        .stats {
-            margin: 15px 0;
-            color: #00E676;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .note {
-            color: #9AD8FF;
-            font-size: 13px;
-            margin-top: 8px;
-        }
-    </style>
+    footer {
+      margin-top: 15px;
+      font-size: 12px;
+      opacity: .7;
+    }
+  </style>
 </head>
-
 <body>
+
+  <div class="card">
     <h1>🎤 مترجم صوتی</h1>
 
-    <div class="card">
-        <label>🎙 زبان صحبت</label>
-        <select id="sourceLang">
-            <option value="fa-IR">فارسی</option>
-            <option value="en-US">English</option>
-            <option value="de-DE">Deutsch</option>
-            <option value="tr-TR">Türkçe</option>
-            <option value="ar-SA">العربية</option>
-        </select>
-        <div class="note">اگر انگلیسی صحبت می‌کنی، زبان صحبت را English بگذار.</div>
-    </div>
+    <select id="sourceLang">
+      <option value="fa-IR">فارسی</option>
+      <option value="en-US">English</option>
+      <option value="de-DE">Deutsch</option>
+      <option value="tr-TR">Türkçe</option>
+      <option value="ar-SA">العربية</option>
+    </select>
 
-    <div class="card">
-        <label>🌍 زبان مقصد</label>
-        <select id="targetLang">
-            <option value="fa">فارسی</option>
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-            <option value="tr">Türkçe</option>
-            <option value="ar">العربية</option>
-        </select>
-    </div>
+    <select id="targetLang">
+      <option value="en">English</option>
+      <option value="fa">فارسی</option>
+      <option value="de">Deutsch</option>
+      <option value="tr">Türkçe</option>
+      <option value="ar">العربية</option>
+    </select>
 
-    <div class="card">
-        <label>📝 متن تشخیص داده شده</label>
-        <textarea id="sourceText" rows="4" readonly></textarea>
-    </div>
+    <button id="recordBtn">🎙 شروع صحبت</button>
 
-    <div class="card">
-        <label>🔁 ترجمه</label>
-        <textarea id="translatedText" rows="4" readonly></textarea>
-    </div>
+    <div class="box" id="originalText">متن ورودی…</div>
+    <div class="box" id="translatedText">ترجمه…</div>
 
-    <div class="card">
-        <button id="recordBtn">🎤 شروع صحبت</button>
-        <button id="stopBtn">⏹ توقف صدا</button>
-        <div class="note" id="status">وضعیت: آماده</div>
-    </div>
+    <footer>Voice Translator PWA</footer>
+  </div>
 
-    <div class="stats" id="stats">تعداد ترجمه‌ها: 0</div>
+<script>
+let recognition;
+let userInteracted = false;
 
-    <script>
-        let recognition = null;
-        let count = 0;
+if ('webkitSpeechRecognition' in window) {
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+} else {
+  alert("مرورگر شما تشخیص صدا را پشتیبانی نمی‌کند");
+}
 
-        const statusEl = document.getElementById("status");
-        const sourceTextEl = document.getElementById("sourceText");
-        const translatedTextEl = document.getElementById("translatedText");
+document.getElementById("recordBtn").onclick = () => {
+  userInteracted = true;
+  const src = document.getElementById("sourceLang").value;
+  recognition.lang = src;
+  recognition.start();
+};
 
-        function setStatus(t) { statusEl.textContent = "وضعیت: " + t; }
+recognition.onresult = async (event) => {
+  const text = event.results[0][0].transcript;
+  document.getElementById("originalText").innerText = text;
 
-        // -------- Speech Recognition --------
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const target = document.getElementById("targetLang").value;
+  const translated = await translateText(text, target);
 
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
+  document.getElementById("translatedText").innerText = translated;
+  speak(translated, target);
+};
 
-            recognition.onstart = () => setStatus("در حال گوش دادن...");
-            recognition.onend = () => setStatus("آماده");
-            recognition.onerror = (e) => setStatus("خطا: " + (e.error || "unknown"));
+async function translateText(text, target) {
+  const res = await fetch(
+    "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" +
+      target +
+      "&dt=t&q=" +
+      encodeURIComponent(text)
+  );
+  const data = await res.json();
+  return data[0][0][0];
+}
 
-            recognition.onresult = (event) => {
-                const text = event.results[0][0].transcript;
-                sourceTextEl.value = text;
-                translateText(text);
-            };
-        } else {
-            setStatus("مرورگر شما تشخیص صدا ندارد (Chrome/Edge پیشنهاد می‌شود).");
-        }
+function speak(text, lang) {
+  if (!userInteracted) return;
 
-        // -------- TTS (Browser) --------
-        function ttsSpeak(text, targetLang) {
-            window.speechSynthesis.cancel();
+  speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
 
-            const voiceLangMap = {
-                fa: "fa-IR", en: "en-US", de: "de-DE", tr: "tr-TR", ar: "ar-SA", fr: "fr-FR"
-            };
+  const map = {
+    fa: "fa-IR",
+    en: "en-US",
+    de: "de-DE",
+    tr: "tr-TR",
+    ar: "ar-SA"
+  };
 
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = voiceLangMap[targetLang] || targetLang;
+  utter.lang = map[lang] || lang;
+  speechSynthesis.speak(utter);
+}
 
-            const voices = window.speechSynthesis.getVoices();
-            const best = voices.find(v => (v.lang || "").toLowerCase().startsWith((utter.lang || "").toLowerCase()));
-            if (best) utter.voice = best;
-
-            window.speechSynthesis.speak(utter);
-        }
-        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-
-        // -------- Buttons --------
-        document.getElementById("recordBtn").onclick = () => {
-            if (!recognition) {
-                alert("تشخیص صدا پشتیبانی نمی‌شود. Chrome/Edge را امتحان کن.");
-                return;
-            }
-            const src = document.getElementById("sourceLang").value;
-            recognition.lang = src;
-            recognition.start();
-        };
-
-        document.getElementById("stopBtn").onclick = () => {
-            window.speechSynthesis.cancel();
-            try { if (recognition) recognition.abort(); } catch (e) { }
-            setStatus("توقف شد");
-        };
-
-        // -------- Translate --------
-        async function translateText(text) {
-            const source = document.getElementById("sourceLang").value.split("-")[0];
-            const target = document.getElementById("targetLang").value;
-
-            setStatus("در حال ترجمه...");
-
-            const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`;
-
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                const translated = data?.responseData?.translatedText || "";
-
-                translatedTextEl.value = translated;
-
-                if (translated.trim()) {
-                    ttsSpeak(translated, target);
-                }
-
-                count++;
-                document.getElementById("stats").innerText = `تعداد ترجمه‌ها: ${count}`;
-                setStatus("تمام شد ✅");
-            } catch (e) {
-                setStatus("خطا در ترجمه (اینترنت را چک کن).");
-            }
-        }
-
-        // -------- Service Worker --------
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./service-worker.js")
-                .then(() => console.log("SW OK"))
-                .catch(() => console.log("SW ERR"));
-        }
-    </script>
-
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
 </body>
-
 </html>
