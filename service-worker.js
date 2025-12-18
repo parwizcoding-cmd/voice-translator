@@ -1,31 +1,20 @@
-const CACHE_NAME = 'voice-translator-cache-v3';
-
-const urlsToCache = [
-    './',
-    './index.html',
-    './manifest.json',
-    './icon-192.png',
-    './icon-512.png'
-];
-
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
-    );
-    self.skipWaiting();
-});
-
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((keys) =>
-            Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)))
-        )
-    );
-    self.clients.claim();
-});
-
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request).then((cached) => cached || fetch(event.request))
-    );
-});
+{
+  "name": "Voice Translator",
+  "short_name": "Translator",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#00E676",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/parwizcoding-cmd/voice-translator@main/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn.jsdelivr.net/gh/parwizcoding-cmd/voice-translator@main/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
