@@ -50,8 +50,8 @@ body{
   align-items:center;
   margin-bottom:10px;
 }
-.logoRight{
-  justify-self:end;
+.logoLeft{
+  justify-self:start; /* 👈 لوگو سمت چپ */
   font-size:30px;
   font-weight:900;
   letter-spacing:2px;
@@ -95,7 +95,7 @@ button:disabled{opacity:.55}
 <div class="card">
 
 <div class="topbar">
-  <div class="logoRight">PZ</div>
+  <div class="logoLeft">PZ</div>
   <h1>Voice Translator</h1>
   <div></div>
 </div>
@@ -137,7 +137,7 @@ button:disabled{opacity:.55}
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)
  ||(navigator.userAgent.includes("Mac")&&"ontouchend"in document);
 
-/* 🌍 LANGUAGES (English US اضافه شد 🇺🇸) */
+/* 🌍 LANGUAGES */
 const LANGS=[
  {f:"🇮🇷",n:"فارسی",tl:"fa",sl:"fa-IR"},
  {f:"🇺🇸",n:"English (US)",tl:"en",sl:"en-US"},
@@ -160,10 +160,8 @@ LANGS.forEach(l=>{
   s.add(new Option(`${l.f} ${l.n}`,l.sl));
   t.add(new Option(`${l.f} ${l.n}`,l.tl));
 });
-s.value="fa-IR";
-t.value="en";
+s.value="fa-IR";t.value="en";
 
-/* Translate */
 async function translateText(text,tl){
   const r=await fetch(
     `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
@@ -222,7 +220,7 @@ if(SR){
   hint.textContent="تشخیص صدا پشتیبانی نمی‌شود";
 }
 
-/* Clear texts */
+/* Clear */
 clearTextBtn.onclick=()=>{
   o.textContent="متن ورودی…";
   tr.textContent="ترجمه…";
