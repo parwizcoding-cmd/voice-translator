@@ -1,235 +1,235 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>Voice Translator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0B1220">
-  <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<title>Voice Translator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B1220">
+<link rel="manifest" href="manifest.json">
 
-  <style>
-    :root{
-      --bg1:#0B1220;
-      --bg2:#0E1B2E;
-      --card: rgba(255,255,255,0.06);
-      --stroke: rgba(255,255,255,0.14);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.70);
-      --accent:#7C3AED;
-      --danger:#EF4444;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:"Segoe UI",Tahoma,sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:18px;
-      background:
-        radial-gradient(900px 500px at 20% 15%, rgba(124,58,237,.35), transparent 55%),
-        radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.25), transparent 55%),
-        linear-gradient(135deg,var(--bg1),var(--bg2));
-    }
-    .wrap{width:100%;max-width:560px}
-    .card{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:22px;
-      padding:22px;
-      box-shadow:0 25px 60px rgba(0,0,0,.45);
-      backdrop-filter:blur(10px);
-      text-align:center;
-      position:relative;
-      overflow:hidden;
-    }
+<style>
+:root{
+  --bg1:#0B1220;--bg2:#0E1B2E;
+  --card:rgba(255,255,255,.06);
+  --stroke:rgba(255,255,255,.14);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.7);
+  --accent:#7C3AED;--danger:#EF4444;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Segoe UI,Tahoma;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:var(--text);
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;
+}
+.card{
+  width:100%;max-width:560px;
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 25px 60px rgba(0,0,0,.45);
+}
+.topbar{
+  direction:ltr;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  margin-bottom:10px;
+}
+.logo{
+  font-size:30px;font-weight:900;
+  background:linear-gradient(135deg,#7C3AED,#22C55E);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+h1{margin:0;text-align:center;direction:rtl}
 
-    /* 🔹 Top bar FIXED for real left logo */
-    .topbar{
-      direction:ltr; /* مهم */
-      display:grid;
-      grid-template-columns: auto 1fr auto;
-      align-items:center;
-      margin-bottom:10px;
-    }
-    .logoLeft{
-      justify-self:start; /* چپ واقعی */
-      font-size:30px;
-      font-weight:900;
-      letter-spacing:2px;
-      background:linear-gradient(135deg,#7C3AED,#22C55E);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      user-select:none;
-    }
-    h1{
-      margin:0;
-      font-size:20px;
-      font-weight:800;
-      justify-self:center;
-      direction:rtl;
-    }
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+label{font-size:12px;color:var(--muted)}
 
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+select,textarea,button{
+  width:100%;padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(16,23,40,.7);
+  color:var(--text);font-size:15px;
+}
 
-    select,textarea,button{
-      width:100%;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(16,23,40,.65);
-      color:var(--text);
-      padding:12px;
-      font-size:15px;
-    }
+textarea{margin-top:10px;min-height:90px;text-align:center}
 
-    .boxes{display:grid;gap:10px;margin-top:12px}
-    .box{
-      min-height:60px;
-      border-radius:16px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:12px;
-      text-align:center;
-      word-break:break-word;
-      position:relative;
-    }
+.boxes{display:grid;gap:10px;margin-top:12px}
+.box{
+  min-height:60px;border-radius:16px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  padding:12px;text-align:center
+}
 
-    textarea{margin-top:10px;min-height:90px;resize:vertical;text-align:center}
+.btnRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+button{font-weight:700;cursor:pointer}
+.primary{background:linear-gradient(135deg,var(--accent),#A78BFA);color:#000}
+.secondary{background:rgba(255,255,255,.08)}
+.danger{background:rgba(239,68,68,.2)}
 
-    .btnRow{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
+button:disabled{opacity:.5}
 
-    button{cursor:pointer;font-weight:700}
-    button:disabled{opacity:.55;cursor:not-allowed}
+.hint{margin-top:10px;font-size:12px;color:var(--muted);min-height:18px}
 
-    .primary{background:linear-gradient(135deg,var(--accent),#A78BFA);color:#0B1220}
-    .secondary{background:rgba(255,255,255,.06)}
-    .danger{background:rgba(239,68,68,.15)}
-
-    .hint{margin-top:10px;font-size:12px;color:var(--muted);min-height:18px}
-
-    @media(max-width:420px){
-      .grid,.btnRow{grid-template-columns:1fr}
-    }
-  </style>
+@media(max-width:420px){
+  .grid,.btnRow{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-<div class="wrap">
-  <div class="card">
-
-    <!-- TOP -->
-    <div class="topbar">
-      <div class="logoLeft">PZ</div>
-      <h1>Voice Translator</h1>
-      <div></div>
-    </div>
-
-    <!-- Languages -->
-    <div class="grid">
-      <div>
-        <label>زبان ورودی</label>
-        <select id="sourceLang"></select>
-      </div>
-      <div>
-        <label>زبان مقصد</label>
-        <select id="targetLang"></select>
-      </div>
-    </div>
-
-    <!-- Output -->
-    <div class="boxes">
-      <div class="box" id="originalText">متن ورودی…</div>
-      <div class="box" id="translatedText">ترجمه…</div>
-    </div>
-
-    <!-- Input -->
-    <textarea id="manualInput" placeholder="متن را اینجا بنویس…"></textarea>
-
-    <!-- Buttons -->
-    <div class="btnRow">
-      <button id="recordBtn" class="primary">🎙 شروع صحبت</button>
-      <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
-    </div>
-
-    <div class="btnRow">
-      <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
-      <button id="clearBtn" class="danger">🧹 پاک کردن</button>
-    </div>
-
-    <div class="hint" id="hintText"></div>
+<div class="card">
+  <div class="topbar">
+    <div class="logo">PZ</div>
+    <h1>Voice Translator</h1>
+    <div></div>
   </div>
+
+  <div class="grid">
+    <div>
+      <label>زبان ورودی</label>
+      <select id="sourceLang"></select>
+    </div>
+    <div>
+      <label>زبان مقصد</label>
+      <select id="targetLang"></select>
+    </div>
+  </div>
+
+  <div class="boxes">
+    <div class="box" id="original">متن ورودی…</div>
+    <div class="box" id="translated">ترجمه…</div>
+  </div>
+
+  <textarea id="input" placeholder="متن را بنویس یا صحبت کن…"></textarea>
+
+  <div class="btnRow">
+    <button id="record" class="primary">🎙 شروع صحبت</button>
+    <button id="translate" class="secondary">🔁 ترجمه متن</button>
+  </div>
+
+  <div class="btnRow">
+    <button id="play" class="secondary" disabled>🔊 پخش ترجمه</button>
+    <button id="clear" class="danger">🧹 پاک کردن</button>
+  </div>
+
+  <div class="hint" id="hint"></div>
 </div>
 
 <script>
-  const LANGS=[
-    {n:"فارسی",tl:"fa",sl:"fa-IR",rtl:true},
-    {n:"English",tl:"en",sl:"en-US"},
-    {n:"Français",tl:"fr",sl:"fr-FR"},
-    {n:"Deutsch",tl:"de",sl:"de-DE"},
-    {n:"Ελληνικά",tl:"el",sl:"el-GR"},
-    {n:"العربية",tl:"ar",sl:"ar-SA",rtl:true},
-    {n:"Türkçe",tl:"tr",sl:"tr-TR"},
-    {n:"Русский",tl:"ru",sl:"ru-RU"}
-  ];
+/* ---------- Language list ---------- */
+const LANGS=[
+ {n:"فارسی",sl:"fa-IR",tl:"fa",rtl:true},
+ {n:"English",sl:"en-US",tl:"en"},
+ {n:"Français",sl:"fr-FR",tl:"fr"},
+ {n:"Deutsch",sl:"de-DE",tl:"de"},
+ {n:"Ελληνικά",sl:"el-GR",tl:"el"},
+ {n:"العربية",sl:"ar-SA",tl:"ar",rtl:true},
+ {n:"Türkçe",sl:"tr-TR",tl:"tr"},
+ {n:"Русский",sl:"ru-RU",tl:"ru"}
+];
 
-  const s=sourceLang,t=targetLang,o=originalText,tr=translatedText,m=manualInput;
-  const play=playBtn, clearBtn=document.getElementById("clearBtn");
-  const hint=hintText;
+const sLang=sourceLang,tLang=targetLang;
+LANGS.forEach(l=>{
+  sLang.add(new Option(l.n,l.sl));
+  tLang.add(new Option(l.n,l.tl));
+});
+sLang.value="fa-IR";tLang.value="en";
 
-  LANGS.forEach(l=>{
-    s.add(new Option(l.n,l.sl));
-    t.add(new Option(l.n,l.tl));
-  });
-  s.value="fa-IR"; t.value="en";
+/* ---------- Translate ---------- */
+async function translateText(text){
+  const res=await fetch(
+    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tLang.value}&dt=t&q=${encodeURIComponent(text)}`
+  );
+  const j=await res.json();
+  return j[0][0][0];
+}
 
-  async function translateText(text,tl){
-    const r=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`);
-    const j=await r.json();
-    return j[0][0][0];
-  }
+/* ---------- Speech ---------- */
+let recognition=null;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SR){
+  recognition=new SR();
+  recognition.continuous=false;
+  recognition.interimResults=false;
 
-  let last="";
-  translateBtn.onclick=async()=>{
-    const text=m.value.trim();
-    if(!text){hint.textContent="متن وارد کن";return}
-    o.textContent=text;
-    const out=await translateText(text,t.value);
-    tr.textContent=out;
+  recognition.onresult=async(e)=>{
+    const text=e.results[0][0].transcript;
+    input.value=text;
+    original.textContent=text;
+
+    hint.textContent="در حال ترجمه…";
+    const out=await translateText(text);
+    translated.textContent=out;
     last=out;
     play.disabled=false;
-    hint.textContent="";
+
+    if(!/iPhone|iPad|iPod/.test(navigator.userAgent)){
+      speak(out);
+    }else{
+      hint.textContent="برای صدا روی پخش بزن";
+    }
   };
 
-  play.onclick=()=>{
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(last);
-    u.lang=t.value;
-    speechSynthesis.speak(u);
+  recognition.onerror=()=>{
+    hint.textContent="تشخیص صدا کار نکرد";
   };
+}
 
-  /* 🧹 Clear ALL */
-  clearBtn.onclick=()=>{
-    speechSynthesis.cancel();
-    m.value="";
-    o.textContent="متن ورودی…";
-    tr.textContent="ترجمه…";
-    last="";
-    play.disabled=true;
-    hint.textContent="";
-  };
+/* ---------- Speak ---------- */
+function speak(text){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=tLang.value;
+  speechSynthesis.speak(u);
+}
 
-  if("serviceWorker"in navigator)navigator.serviceWorker.register("service-worker.js");
+/* ---------- Buttons ---------- */
+let last="";
+
+record.onclick=()=>{
+  if(!recognition){
+    hint.textContent="تشخیص صدا پشتیبانی نمی‌شود";
+    return;
+  }
+  hint.textContent="در حال گوش دادن…";
+  recognition.lang=sLang.value;
+  recognition.start();
+};
+
+translate.onclick=async()=>{
+  if(!input.value.trim()){hint.textContent="متن وارد کن";return}
+  original.textContent=input.value;
+  const out=await translateText(input.value);
+  translated.textContent=out;
+  last=out;
+  play.disabled=false;
+};
+
+play.onclick=()=>speak(last);
+
+clear.onclick=()=>{
+  speechSynthesis.cancel();
+  input.value="";
+  original.textContent="متن ورودی…";
+  translated.textContent="ترجمه…";
+  last="";
+  play.disabled=true;
+  hint.textContent="";
+};
+
+if("serviceWorker"in navigator){
+  navigator.serviceWorker.register("service-worker.js");
+}
 </script>
 </body>
 </html>
