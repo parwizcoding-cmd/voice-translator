@@ -14,14 +14,14 @@
       color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;
       padding:18px;box-sizing:border-box
     }
-    .card{background:#121212;border-radius:20px;padding:22px;width:100%;max-width:480px;
+    .card{background:#121212;border-radius:20px;padding:22px;width:100%;max-width:520px;
       box-shadow:0 20px 40px rgba(0,0,0,.5);text-align:center}
     h1{margin:0 0 6px 0;color:#00E676;font-size:26px}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,230,118,.12);
       border:1px solid rgba(0,230,118,.35);color:#b9ffd8;font-size:12px;margin:8px 0 12px 0}
     select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:none;font-size:16px;box-sizing:border-box}
     select,textarea{background:#1e1e1e;color:#fff}
-    textarea{resize:vertical;min-height:78px;direction:rtl}
+    textarea{resize:vertical;min-height:86px;direction:rtl}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
     button{background:#00E676;color:#000;font-weight:700;cursor:pointer;transition:transform .15s ease}
     button.secondary{background:#2a2a2a;color:#fff;border:1px solid rgba(255,255,255,.12)}
@@ -29,15 +29,14 @@
     button:active{transform:scale(.97)}
     .box{background:#1e1e1e;border-radius:12px;padding:12px;margin-top:12px;min-height:60px;direction:rtl;text-align:center;word-break:break-word}
     .hint{margin-top:10px;font-size:12px;opacity:.9;line-height:1.7;text-align:center}
-    .mini{font-size:12px;opacity:.85;margin-top:8px}
-    footer{margin-top:14px;font-size:12px;opacity:.7}
     .iosBox{
       margin-top:10px;padding:10px;border-radius:12px;
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
-      display:none
+      display:none;text-align:right
     }
     .iosBox b{color:#00E676}
+    footer{margin-top:14px;font-size:12px;opacity:.7}
   </style>
 </head>
 <body>
@@ -46,41 +45,19 @@
   <h1>🎤 مترجم صوتی</h1>
   <div class="pill" id="platformPill">درحال بررسی دستگاه…</div>
 
-  <select id="sourceLang" aria-label="زبان ورودی">
-    <option value="fa-IR">فارسی</option>
-    <option value="en-US">English</option>
-    <option value="fr-FR">Français</option>
-    <option value="de-DE">Deutsch</option>
-    <option value="tr-TR">Türkçe</option>
-    <option value="ar-SA">العربية</option>
-  </select>
+  <select id="sourceLang" aria-label="زبان ورودی"></select>
+  <select id="targetLang" aria-label="زبان مقصد"></select>
 
-  <select id="targetLang" aria-label="زبان مقصد">
-    <option value="en">English</option>
-    <option value="fa">فارسی</option>
-    <option value="fr">Français</option>
-    <option value="de">Deutsch</option>
-    <option value="tr">Türkçe</option>
-    <option value="ar">العربية</option>
-  </select>
-
-  <!-- iPhone helper box -->
   <div class="iosBox" id="iosHelp">
-    <div class="mini">
-      <b>راهنمای iPhone:</b><br>
-      تشخیص گفتار فارسی در مرورگر iPhone ممکن است کار نکند. برای فارسی:
-      روی کادر متن کلیک کن، کیبورد باز می‌شود، سپس دکمه <b>🎙️ میکروفون (Dictation)</b> را بزن و فارسی صحبت کن.
-      بعد روی <b>«ترجمه متن»</b> بزن. برای صدا هم حتماً <b>«پخش ترجمه»</b> را بزن.
+    <div>
+      <b>راهنمای iPhone (فارسی):</b><br>
+      تشخیص گفتار فارسی در مرورگر iPhone ممکن است کار نکند.<br>
+      ✅ روی کادر متن بزن → کیبورد باز می‌شود → دکمه <b>🎙️ میکروفون (Dictation)</b> را بزن → فارسی صحبت کن → بعد «ترجمه متن».<br>
+      🔊 برای شنیدن صدا حتماً «پخش ترجمه» را بزن.
     </div>
   </div>
 
-  <textarea id="manualInput" placeholder="اینجا بنویس… (در iPhone می‌توانی از دیکته کیبورد استفاده کنی)"></textarea>
-
-  <!-- Voice picker to improve pronunciation (especially on iPhone) -->
-  <select id="voiceSelect" aria-label="انتخاب صدا">
-    <option value="">🔊 انتخاب صدای بهتر (اختیاری)</option>
-  </select>
-  <div class="mini" id="voiceTip"></div>
+  <textarea id="manualInput" placeholder="اینجا بنویس… (در iPhone می‌توانی با Dictation متن را بگویی)"></textarea>
 
   <div class="row">
     <button id="recordBtn">🎙 شروع صحبت</button>
@@ -120,8 +97,6 @@
   const elHint = document.getElementById("hintText");
   const elPill = document.getElementById("platformPill");
   const elIOSHelp = document.getElementById("iosHelp");
-  const elVoiceSelect = document.getElementById("voiceSelect");
-  const elVoiceTip = document.getElementById("voiceTip");
 
   elPill.textContent = isIOS ? "🍎 iPhone/iOS" : "🤖 Android/Desktop";
   if (isIOS) elIOSHelp.style.display = "block";
@@ -136,13 +111,89 @@
     elStopBtn.disabled = !hasText;
   }
 
-  // Map translate target -> TTS tag
-  function getTTSLang(target){
-    const map = { fa:"fa-IR", en:"en-US", fr:"fr-FR", de:"de-DE", tr:"tr-TR", ar:"ar-SA" };
-    return map[target] || target;
+  // -------- Big language list (translate + speech) --------
+  // translateCode: for Google translate tl=
+  // speechCode: for SpeechRecognition lang=
+  const LANGS = [
+    {name:"فارسی", translate:"fa", speech:"fa-IR", rtl:true},
+    {name:"English", translate:"en", speech:"en-US"},
+    {name:"Français", translate:"fr", speech:"fr-FR"},
+    {name:"Deutsch", translate:"de", speech:"de-DE"},
+    {name:"Español", translate:"es", speech:"es-ES"},
+    {name:"Italiano", translate:"it", speech:"it-IT"},
+    {name:"Português", translate:"pt", speech:"pt-PT"},
+    {name:"Русский", translate:"ru", speech:"ru-RU"},
+    {name:"Українська", translate:"uk", speech:"uk-UA"},
+    {name:"Türkçe", translate:"tr", speech:"tr-TR"},
+    {name:"العربية", translate:"ar", speech:"ar-SA", rtl:true},
+    {name:"اردو", translate:"ur", speech:"ur-PK", rtl:true},
+    {name:"हिन्दी", translate:"hi", speech:"hi-IN"},
+    {name:"বাংলা", translate:"bn", speech:"bn-BD"},
+    {name:"ਪੰਜਾਬੀ", translate:"pa", speech:"pa-IN"},
+    {name:"ગુજરાતી", translate:"gu", speech:"gu-IN"},
+    {name:"தமிழ்", translate:"ta", speech:"ta-IN"},
+    {name:"తెలుగు", translate:"te", speech:"te-IN"},
+    {name:"ಕನ್ನಡ", translate:"kn", speech:"kn-IN"},
+    {name:"മലയാളം", translate:"ml", speech:"ml-IN"},
+    {name:"한국어", translate:"ko", speech:"ko-KR"},
+    {name:"日本語", translate:"ja", speech:"ja-JP"},
+    {name:"中文 (简体)", translate:"zh-CN", speech:"zh-CN"},
+    {name:"中文 (繁體)", translate:"zh-TW", speech:"zh-TW"},
+    {name:"ไทย", translate:"th", speech:"th-TH"},
+    {name:"Tiếng Việt", translate:"vi", speech:"vi-VN"},
+    {name:"Bahasa Indonesia", translate:"id", speech:"id-ID"},
+    {name:"Bahasa Melayu", translate:"ms", speech:"ms-MY"},
+    {name:"Filipino", translate:"tl", speech:"fil-PH"},
+    {name:"Nederlands", translate:"nl", speech:"nl-NL"},
+    {name:"Svenska", translate:"sv", speech:"sv-SE"},
+    {name:"Norsk", translate:"no", speech:"nb-NO"},
+    {name:"Dansk", translate:"da", speech:"da-DK"},
+    {name:"Suomi", translate:"fi", speech:"fi-FI"},
+    {name:"Polski", translate:"pl", speech:"pl-PL"},
+    {name:"Ελληνικά", translate:"el", speech:"el-GR"},
+    {name:"עברית", translate:"he", speech:"he-IL", rtl:true},
+    {name:"Română", translate:"ro", speech:"ro-RO"},
+    {name:"Magyar", translate:"hu", speech:"hu-HU"},
+    {name:"Čeština", translate:"cs", speech:"cs-CZ"},
+  ];
+
+  function fillLanguageSelects(){
+    elSource.innerHTML = "";
+    elTarget.innerHTML = "";
+
+    for (const L of LANGS){
+      const o1 = document.createElement("option");
+      o1.value = L.speech;
+      o1.textContent = L.name;
+      elSource.appendChild(o1);
+
+      const o2 = document.createElement("option");
+      o2.value = L.translate;
+      o2.textContent = L.name;
+      elTarget.appendChild(o2);
+    }
+
+    // defaults
+    elSource.value = "fa-IR";
+    elTarget.value = "en";
   }
 
-  // --- SpeechRecognition (often missing on iOS Safari) ---
+  function setBoxesDirectionByLang(){
+    const src = LANGS.find(x => x.speech === elSource.value);
+    const tgt = LANGS.find(x => x.translate === elTarget.value);
+
+    const srcRTL = !!src?.rtl;
+    const tgtRTL = !!tgt?.rtl;
+
+    elManual.style.direction = srcRTL ? "rtl" : "ltr";
+    elOriginal.style.direction = srcRTL ? "rtl" : "ltr";
+    elTranslated.style.direction = tgtRTL ? "rtl" : "ltr";
+
+    elOriginal.style.textAlign = "center";
+    elTranslated.style.textAlign = "center";
+  }
+
+  // --- SpeechRecognition ---
   function initRecognition(){
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
@@ -164,11 +215,8 @@
       elTranslated.innerText = translated;
       setAudioButtons(!!translated);
 
-      if (!isIOS) {
-        speak(translated, target); // Android ok auto
-      } else {
-        showHint("در iPhone برای شنیدن صدا حتماً «پخش ترجمه» را بزن. برای فارسی از دیکته کیبورد استفاده کن.");
-      }
+      if (!isIOS) speak(translated, target);
+      else showHint("iPhone: برای شنیدن صدا «پخش ترجمه» را بزن. (فارسی گفتاری ممکن است کار نکند؛ از Dictation استفاده کن)");
     };
 
     r.onerror = () => showHint("تشخیص صدا مشکل دارد. متن را دستی بنویس و «ترجمه متن» را بزن.");
@@ -176,7 +224,7 @@
   }
   recognition = initRecognition();
 
-  // --- Unlock audio after user gesture (iOS requirement) ---
+  // --- iOS audio unlock ---
   function unlockAudioOnce(){
     if (audioUnlocked) return;
     audioUnlocked = true;
@@ -190,129 +238,67 @@
   }
   ["click","touchend"].forEach(evt => document.addEventListener(evt, unlockAudioOnce, {once:true}));
 
-  // --- Voice picking (improves pronunciation when voices exist) ---
+  // --- Speak with best available voice (no picker) ---
   function norm(s){ return (s||"").toLowerCase().replace("_","-"); }
+  function getVoicesSafe(){ try { return speechSynthesis.getVoices() || []; } catch(_) { return []; } }
 
-  function getVoicesSafe(){
-    try { return speechSynthesis.getVoices() || []; } catch(_) { return []; }
-  }
-
-  function pickBestVoice(langTag){
+  function bestVoiceFor(langTag){
     const voices = getVoicesSafe();
     if (!voices.length) return null;
+
     const want = norm(langTag);
     const base = want.split("-")[0];
 
-    const candidates = voices.filter(v => norm(v.lang) === want)
-      .concat(voices.filter(v => norm(v.lang).startsWith(base)));
+    const exact = voices.filter(v => norm(v.lang) === want);
+    const baseMatch = voices.filter(v => norm(v.lang).startsWith(base));
+    const candidates = (exact.length ? exact : baseMatch);
 
-    // unique by name+lang
-    const seen = new Set();
-    const uniq = [];
-    for (const v of candidates){
-      const k = (v.name||"")+"|"+(v.lang||"");
-      if (!seen.has(k)){ seen.add(k); uniq.push(v); }
-    }
-    if (!uniq.length) return null;
+    if (!candidates.length) return null;
 
     const score = (v) => {
-      const name = (v.name||"").toLowerCase();
+      const n = (v.name||"").toLowerCase();
       let s = 0;
       if (v.default) s += 50;
-      if (name.includes("enhanced")) s += 18;
-      if (name.includes("premium")) s += 14;
-      if (name.includes("google")) s += 12;
-      if (name.includes("siri")) s += 10;
-      if (name.includes("compact")) s -= 2;
+      if (n.includes("enhanced")) s += 18;
+      if (n.includes("premium")) s += 14;
+      if (n.includes("google")) s += 12;
+      if (n.includes("siri")) s += 10;
+      if (n.includes("compact")) s -= 2;
       return s;
     };
-    uniq.sort((a,b)=>score(b)-score(a));
-    return uniq[0];
+    return candidates.slice().sort((a,b)=>score(b)-score(a))[0];
   }
 
-  function fillVoiceSelect(){
-    const target = elTarget.value;
-    const langTag = getTTSLang(target);
-    const voices = getVoicesSafe();
-
-    // clear
-    elVoiceSelect.innerHTML = `<option value="">🔊 انتخاب صدای بهتر (اختیاری)</option>`;
-
-    // filter voices by base language
-    const base = norm(langTag).split("-")[0];
-    const list = voices.filter(v => norm(v.lang).startsWith(base));
-
-    if (!list.length){
-      elVoiceTip.textContent = isIOS
-        ? "اگر تلفظ خوب نیست، ممکن است Voice این زبان روی iPhone نصب نباشد. در Settings → Accessibility → Spoken Content → Voices آن زبان را دانلود کن."
-        : "Voice این زبان روی دستگاه پیدا نشد.";
-      return;
-    }
-
-    elVoiceTip.textContent = "برای تلفظ بهتر، یک صدا را انتخاب کن (روی iPhone خیلی کمک می‌کند).";
-
-    // Add options
-    for (const v of list){
-      const opt = document.createElement("option");
-      opt.value = (v.name||"") + "|" + (v.lang||"");
-      opt.textContent = `${v.name} (${v.lang})${v.default ? " ⭐" : ""}`;
-      elVoiceSelect.appendChild(opt);
-    }
-
-    // restore saved
-    const key = "voice_choice_" + base;
-    const saved = localStorage.getItem(key);
-    if (saved) elVoiceSelect.value = saved;
-  }
-
+  // iOS voices load late
   speechSynthesis.getVoices();
-  speechSynthesis.onvoiceschanged = () => {
-    speechSynthesis.getVoices();
-    fillVoiceSelect();
-  };
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 
-  elTarget.addEventListener("change", () => {
-    fillVoiceSelect();
-  });
-
-  elVoiceSelect.addEventListener("change", () => {
-    const target = elTarget.value;
-    const base = norm(getTTSLang(target)).split("-")[0];
-    const key = "voice_choice_" + base;
-    localStorage.setItem(key, elVoiceSelect.value || "");
-  });
-
-  function getChosenVoiceFor(targetLang){
-    const langTag = getTTSLang(targetLang);
-    const base = norm(langTag).split("-")[0];
-    const key = "voice_choice_" + base;
-    const saved = localStorage.getItem(key) || "";
-    if (!saved) return null;
-
-    const [name, lang] = saved.split("|");
-    const voices = getVoicesSafe();
-    return voices.find(v => (v.name===name && v.lang===lang)) || null;
+  function ttsLangFromTranslateCode(tl){
+    // map translate codes to nicer TTS tags when possible
+    const map = {
+      "en":"en-US","fr":"fr-FR","de":"de-DE","es":"es-ES","it":"it-IT","pt":"pt-PT",
+      "ru":"ru-RU","uk":"uk-UA","tr":"tr-TR","ar":"ar-SA","fa":"fa-IR","ur":"ur-PK",
+      "hi":"hi-IN","bn":"bn-BD","ta":"ta-IN","te":"te-IN","ml":"ml-IN","ko":"ko-KR",
+      "ja":"ja-JP","zh-CN":"zh-CN","zh-TW":"zh-TW","th":"th-TH","vi":"vi-VN","id":"id-ID",
+      "nl":"nl-NL","sv":"sv-SE","nb":"nb-NO","da":"da-DK","fi":"fi-FI","pl":"pl-PL","el":"el-GR",
+      "he":"he-IL","ro":"ro-RO","hu":"hu-HU","cs":"cs-CZ","ms":"ms-MY","tl":"fil-PH"
+    };
+    return map[tl] || tl;
   }
 
-  function speak(text, targetLang){
+  function speak(text, targetTranslateCode){
     if (!text) return;
     try { speechSynthesis.cancel(); } catch(_) {}
 
     const utter = new SpeechSynthesisUtterance(text);
-    const ttsLang = getTTSLang(targetLang);
-    utter.lang = ttsLang;
+    const langTag = ttsLangFromTranslateCode(targetTranslateCode);
+    utter.lang = langTag;
 
-    // Use user-selected voice first, else best voice
-    const chosen = getChosenVoiceFor(targetLang);
-    if (chosen) utter.voice = chosen;
-    else {
-      const best = pickBestVoice(ttsLang);
-      if (best) utter.voice = best;
-    }
+    const v = bestVoiceFor(langTag);
+    if (v) utter.voice = v;
 
-    // Extra hint for Persian on iOS
-    const base = norm(ttsLang).split("-")[0];
-    if (isIOS && base === "fa" && !utter.voice){
+    // Helpful hints for iOS Persian voice
+    if (isIOS && targetTranslateCode === "fa" && !v){
       showHint("برای صدای فارسی در iPhone: Settings → Accessibility → Spoken Content → Voices → Persian را دانلود کن.");
     }
 
@@ -334,7 +320,6 @@
     unlockAudioOnce();
 
     if (!recognition){
-      // Important iOS message
       if (isIOS){
         showHint("iPhone: برای فارسی روی کادر متن بزن و از میکروفون کیبورد (Dictation) استفاده کن، سپس «ترجمه متن».");
       } else {
@@ -352,7 +337,7 @@
     unlockAudioOnce();
     const text = (elManual.value || "").trim();
     if (!text){
-      showHint("اول متن بنویس (در iPhone می‌توانی دیکته کنی).");
+      showHint("اول متن بنویس (در iPhone می‌توانی با Dictation متن را بگویی).");
       return;
     }
 
@@ -366,7 +351,7 @@
     setAudioButtons(!!translated);
 
     if (!isIOS) speak(translated, target);
-    else showHint("برای شنیدن صدا در iPhone روی «پخش ترجمه» بزن. برای تلفظ بهتر، یک Voice انتخاب کن.");
+    else showHint("برای شنیدن صدا در iPhone روی «پخش ترجمه» بزن.");
   });
 
   elPlayBtn.addEventListener("click", () => {
@@ -379,17 +364,19 @@
     try { speechSynthesis.cancel(); } catch(_) {}
   });
 
+  elSource.addEventListener("change", setBoxesDirectionByLang);
+  elTarget.addEventListener("change", setBoxesDirectionByLang);
+
   // --- Service Worker ---
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-  }
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
 
   // Init
+  fillLanguageSelects();
+  setBoxesDirectionByLang();
   setAudioButtons(false);
-  fillVoiceSelect();
 
   if (isIOS){
-    showHint("iPhone: برای فارسی معمولاً باید از دیکته کیبورد استفاده کنی. برای صدا «پخش ترجمه» را بزن و اگر تلفظ بد بود Voice انتخاب کن.");
+    showHint("iPhone: اگر فارسی صحبت کردن کار نکرد، از Dictation کیبورد داخل کادر متن استفاده کن. صدا فقط با «پخش ترجمه» پخش می‌شود.");
   } else {
     showHint("آماده ✅ صحبت کن یا متن بنویس؛ ترجمه انجام می‌شود.");
   }
