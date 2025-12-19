@@ -116,10 +116,6 @@ button:disabled{opacity:.55}
 
 <div class="btnRow">
   <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
-  <button id="stopBtn" class="danger" disabled>⏹ توقف صدا</button>
-</div>
-
-<div class="btnRow">
   <button id="clearTextBtn" class="danger">🧹 پاک‌کردن متن‌ها</button>
 </div>
 
@@ -153,7 +149,7 @@ const LANGS=[
 ];
 
 const s=sourceLang,t=targetLang,o=originalText,tr=translatedText;
-const m=manualInput,play=playBtn,stop=stopBtn,hint=hintText;
+const m=manualInput,play=playBtn,hint=hintText;
 
 LANGS.forEach(l=>{
   s.add(new Option(`${l.f} ${l.n}`,l.sl));
@@ -181,7 +177,6 @@ async function runTranslate(text,fromSpeech=false){
   tr.textContent=out;
   last=out;
   play.disabled=!out;
-  stop.disabled=!out;
 
   if(fromSpeech && out){
     if(isIOS){
@@ -202,7 +197,6 @@ function speak(txt,lang){
 /* Buttons */
 translateBtn.onclick=()=>runTranslate(m.value,false);
 play.onclick=()=>last&&speak(last,t.value);
-stop.onclick=()=>speechSynthesis.cancel();
 
 /* Voice */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -223,7 +217,7 @@ if(SR){
   hint.textContent="تشخیص صدا پشتیبانی نمی‌شود";
 }
 
-/* Clear */
+/* Clear texts only */
 clearTextBtn.onclick=()=>{
   o.textContent="متن ورودی…";
   tr.textContent="ترجمه…";
