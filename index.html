@@ -3,174 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <title>Voice Translator</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#00E676">
-
   <link rel="manifest" href="manifest.json">
 
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 18px;
-      box-sizing: border-box;
+    body{
+      margin:0;font-family:"Segoe UI",Tahoma,sans-serif;
+      background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+      color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;
+      padding:18px;box-sizing:border-box
     }
-
-    .card {
-      background: #121212;
-      border-radius: 20px;
-      padding: 22px;
-      width: 100%;
-      max-width: 460px;
-      box-shadow: 0 20px 40px rgba(0,0,0,.5);
-      text-align: center;
+    .card{background:#121212;border-radius:20px;padding:22px;width:100%;max-width:480px;
+      box-shadow:0 20px 40px rgba(0,0,0,.5);text-align:center}
+    h1{margin:0 0 6px 0;color:#00E676;font-size:26px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,230,118,.12);
+      border:1px solid rgba(0,230,118,.35);color:#b9ffd8;font-size:12px;margin:8px 0 12px 0}
+    select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:none;font-size:16px;box-sizing:border-box}
+    select,textarea{background:#1e1e1e;color:#fff}
+    textarea{resize:vertical;min-height:78px;direction:rtl}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    button{background:#00E676;color:#000;font-weight:700;cursor:pointer;transition:transform .15s ease}
+    button.secondary{background:#2a2a2a;color:#fff;border:1px solid rgba(255,255,255,.12)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    button:active{transform:scale(.97)}
+    .box{background:#1e1e1e;border-radius:12px;padding:12px;margin-top:12px;min-height:60px;direction:rtl;text-align:center;word-break:break-word}
+    .hint{margin-top:10px;font-size:12px;opacity:.9;line-height:1.7;text-align:center}
+    .mini{font-size:12px;opacity:.85;margin-top:8px}
+    footer{margin-top:14px;font-size:12px;opacity:.7}
+    .iosBox{
+      margin-top:10px;padding:10px;border-radius:12px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      display:none
     }
-
-    h1 {
-      margin: 0 0 6px 0;
-      color: #00E676;
-      font-size: 26px;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(0,230,118,0.12);
-      border: 1px solid rgba(0,230,118,0.35);
-      color: #b9ffd8;
-      font-size: 12px;
-      margin: 8px 0 12px 0;
-    }
-
-    select, button, textarea {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 12px;
-      border: none;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    select, textarea {
-      background: #1e1e1e;
-      color: #fff;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 74px;
-      direction: rtl;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    button {
-      background: #00E676;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform .15s ease;
-    }
-
-    button.secondary {
-      background: #2a2a2a;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    button:active {
-      transform: scale(0.97);
-    }
-
-    .box {
-      background: #1e1e1e;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 12px;
-      min-height: 60px;
-      direction: rtl;
-      text-align: center;
-      word-break: break-word;
-    }
-
-    .hint {
-      margin-top: 10px;
-      font-size: 12px;
-      opacity: .85;
-      line-height: 1.6;
-    }
-
-    footer {
-      margin-top: 14px;
-      font-size: 12px;
-      opacity: .7;
-    }
+    .iosBox b{color:#00E676}
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h1>🎤 مترجم صوتی</h1>
-    <div class="pill" id="platformPill">درحال بررسی دستگاه…</div>
+<div class="card">
+  <h1>🎤 مترجم صوتی</h1>
+  <div class="pill" id="platformPill">درحال بررسی دستگاه…</div>
 
-    <select id="sourceLang" aria-label="زبان ورودی">
-      <option value="fa-IR">فارسی</option>
-      <option value="en-US">English</option>
-      <option value="fr-FR">Français</option>
-      <option value="de-DE">Deutsch</option>
-      <option value="tr-TR">Türkçe</option>
-      <option value="ar-SA">العربية</option>
-    </select>
+  <select id="sourceLang" aria-label="زبان ورودی">
+    <option value="fa-IR">فارسی</option>
+    <option value="en-US">English</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">Deutsch</option>
+    <option value="tr-TR">Türkçe</option>
+    <option value="ar-SA">العربية</option>
+  </select>
 
-    <select id="targetLang" aria-label="زبان مقصد">
-      <option value="en">English</option>
-      <option value="fa">فارسی</option>
-      <option value="fr">Français</option>
-      <option value="de">Deutsch</option>
-      <option value="tr">Türkçe</option>
-      <option value="ar">العربية</option>
-    </select>
+  <select id="targetLang" aria-label="زبان مقصد">
+    <option value="en">English</option>
+    <option value="fa">فارسی</option>
+    <option value="fr">Français</option>
+    <option value="de">Deutsch</option>
+    <option value="tr">Türkçe</option>
+    <option value="ar">العربية</option>
+  </select>
 
-    <textarea id="manualInput" placeholder="اگر صدا کار نکرد، متن را اینجا بنویس…"></textarea>
-
-    <div class="row">
-      <button id="recordBtn">🎙 شروع صحبت</button>
-      <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
+  <!-- iPhone helper box -->
+  <div class="iosBox" id="iosHelp">
+    <div class="mini">
+      <b>راهنمای iPhone:</b><br>
+      تشخیص گفتار فارسی در مرورگر iPhone ممکن است کار نکند. برای فارسی:
+      روی کادر متن کلیک کن، کیبورد باز می‌شود، سپس دکمه <b>🎙️ میکروفون (Dictation)</b> را بزن و فارسی صحبت کن.
+      بعد روی <b>«ترجمه متن»</b> بزن. برای صدا هم حتماً <b>«پخش ترجمه»</b> را بزن.
     </div>
-
-    <div class="row">
-      <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
-      <button id="stopBtn" class="secondary" disabled>⏹ توقف صدا</button>
-    </div>
-
-    <div class="box" id="originalText">متن ورودی…</div>
-    <div class="box" id="translatedText">ترجمه…</div>
-
-    <div class="hint" id="hintText"></div>
-    <footer>Voice Translator PWA</footer>
   </div>
 
+  <textarea id="manualInput" placeholder="اینجا بنویس… (در iPhone می‌توانی از دیکته کیبورد استفاده کنی)"></textarea>
+
+  <!-- Voice picker to improve pronunciation (especially on iPhone) -->
+  <select id="voiceSelect" aria-label="انتخاب صدا">
+    <option value="">🔊 انتخاب صدای بهتر (اختیاری)</option>
+  </select>
+  <div class="mini" id="voiceTip"></div>
+
+  <div class="row">
+    <button id="recordBtn">🎙 شروع صحبت</button>
+    <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
+  </div>
+
+  <div class="row">
+    <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
+    <button id="stopBtn" class="secondary" disabled>⏹ توقف صدا</button>
+  </div>
+
+  <div class="box" id="originalText">متن ورودی…</div>
+  <div class="box" id="translatedText">ترجمه…</div>
+
+  <div class="hint" id="hintText"></div>
+  <footer>Voice Translator PWA</footer>
+</div>
+
 <script>
-  // --- Platform detect (iPhone/iPad) ---
+  // --- Detect iOS ---
   const isIOS = (() => {
     const ua = navigator.userAgent || "";
     const iOS = /iPad|iPhone|iPod/.test(ua);
@@ -189,37 +119,33 @@
   const elManual = document.getElementById("manualInput");
   const elHint = document.getElementById("hintText");
   const elPill = document.getElementById("platformPill");
+  const elIOSHelp = document.getElementById("iosHelp");
+  const elVoiceSelect = document.getElementById("voiceSelect");
+  const elVoiceTip = document.getElementById("voiceTip");
 
   elPill.textContent = isIOS ? "🍎 iPhone/iOS" : "🤖 Android/Desktop";
+  if (isIOS) elIOSHelp.style.display = "block";
 
   let recognition = null;
   let lastTranslated = "";
   let audioUnlocked = false;
 
-  function showHint(msg) { elHint.textContent = msg || ""; }
-  function setAudioButtons(hasText) {
+  function showHint(msg){ elHint.textContent = msg || ""; }
+  function setAudioButtons(hasText){
     elPlayBtn.disabled = !hasText;
     elStopBtn.disabled = !hasText;
   }
 
-  // Map target language (translate code) -> TTS BCP-47 tag
-  function getTTSLang(target) {
-    const map = {
-      fa: "fa-IR",
-      en: "en-US",
-      fr: "fr-FR",
-      de: "de-DE",
-      tr: "tr-TR",
-      ar: "ar-SA",
-    };
+  // Map translate target -> TTS tag
+  function getTTSLang(target){
+    const map = { fa:"fa-IR", en:"en-US", fr:"fr-FR", de:"de-DE", tr:"tr-TR", ar:"ar-SA" };
     return map[target] || target;
   }
 
-  // --- SpeechRecognition (Chrome/Android usually, iOS often not) ---
-  function initRecognition() {
+  // --- SpeechRecognition (often missing on iOS Safari) ---
+  function initRecognition(){
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
-
     const r = new SR();
     r.continuous = false;
     r.interimResults = false;
@@ -238,107 +164,163 @@
       elTranslated.innerText = translated;
       setAudioButtons(!!translated);
 
-      // iOS blocks auto speak; user must tap Play
       if (!isIOS) {
-        speak(translated, target);
+        speak(translated, target); // Android ok auto
       } else {
-        showHint("در آیفون برای شنیدن صدا حتماً روی «پخش ترجمه» بزن. (اگر فارسی صدا ندارد، Persian Voice را از تنظیمات iOS دانلود کن)");
+        showHint("در iPhone برای شنیدن صدا حتماً «پخش ترجمه» را بزن. برای فارسی از دیکته کیبورد استفاده کن.");
       }
     };
 
-    r.onerror = () => {
-      showHint("تشخیص صدا مشکل دارد. متن را دستی بنویس و «ترجمه متن» را بزن.");
-    };
-
+    r.onerror = () => showHint("تشخیص صدا مشکل دارد. متن را دستی بنویس و «ترجمه متن» را بزن.");
     return r;
   }
-
   recognition = initRecognition();
 
-  // --- iOS audio unlock (must be triggered by user gesture) ---
-  function unlockAudioOnce() {
+  // --- Unlock audio after user gesture (iOS requirement) ---
+  function unlockAudioOnce(){
     if (audioUnlocked) return;
     audioUnlocked = true;
-    try {
+    try{
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(" ");
       u.volume = 0;
       speechSynthesis.speak(u);
       speechSynthesis.cancel();
-    } catch (_) {}
+    }catch(_){}
+  }
+  ["click","touchend"].forEach(evt => document.addEventListener(evt, unlockAudioOnce, {once:true}));
+
+  // --- Voice picking (improves pronunciation when voices exist) ---
+  function norm(s){ return (s||"").toLowerCase().replace("_","-"); }
+
+  function getVoicesSafe(){
+    try { return speechSynthesis.getVoices() || []; } catch(_) { return []; }
   }
 
-  ["click", "touchend"].forEach(evt => {
-    document.addEventListener(evt, () => unlockAudioOnce(), { once: true });
-  });
-
-  // --- Better voice picking (improves pronunciation when voices exist) ---
-  function normalizeLang(s) {
-    return (s || "").toLowerCase().replace("_", "-");
-  }
-
-  function pickBestVoice(langTag) {
-    const voices = speechSynthesis.getVoices() || [];
+  function pickBestVoice(langTag){
+    const voices = getVoicesSafe();
     if (!voices.length) return null;
-
-    const want = normalizeLang(langTag);
+    const want = norm(langTag);
     const base = want.split("-")[0];
 
-    // Prefer: exact match, then same base language, prefer local/service voices.
-    const exact = voices.filter(v => normalizeLang(v.lang) === want);
-    const baseMatch = voices.filter(v => normalizeLang(v.lang).startsWith(base));
+    const candidates = voices.filter(v => norm(v.lang) === want)
+      .concat(voices.filter(v => norm(v.lang).startsWith(base)));
 
-    const preferredOrder = (arr) => {
-      // Put default voice first, then voices containing "google" / "enhanced" / "premium" / "siri" (varies by platform)
-      const score = (v) => {
-        const name = (v.name || "").toLowerCase();
-        let s = 0;
-        if (v.default) s += 50;
-        if (name.includes("google")) s += 20;
-        if (name.includes("enhanced")) s += 15;
-        if (name.includes("premium")) s += 12;
-        if (name.includes("siri")) s += 10;
-        if (name.includes("compact")) s -= 2;
-        return s;
-      };
-      return arr.slice().sort((a,b) => score(b)-score(a));
+    // unique by name+lang
+    const seen = new Set();
+    const uniq = [];
+    for (const v of candidates){
+      const k = (v.name||"")+"|"+(v.lang||"");
+      if (!seen.has(k)){ seen.add(k); uniq.push(v); }
+    }
+    if (!uniq.length) return null;
+
+    const score = (v) => {
+      const name = (v.name||"").toLowerCase();
+      let s = 0;
+      if (v.default) s += 50;
+      if (name.includes("enhanced")) s += 18;
+      if (name.includes("premium")) s += 14;
+      if (name.includes("google")) s += 12;
+      if (name.includes("siri")) s += 10;
+      if (name.includes("compact")) s -= 2;
+      return s;
     };
-
-    let candidates = exact.length ? exact : baseMatch;
-    candidates = preferredOrder(candidates);
-
-    return candidates[0] || null;
+    uniq.sort((a,b)=>score(b)-score(a));
+    return uniq[0];
   }
 
-  // iOS loads voices late sometimes; this helps
+  function fillVoiceSelect(){
+    const target = elTarget.value;
+    const langTag = getTTSLang(target);
+    const voices = getVoicesSafe();
+
+    // clear
+    elVoiceSelect.innerHTML = `<option value="">🔊 انتخاب صدای بهتر (اختیاری)</option>`;
+
+    // filter voices by base language
+    const base = norm(langTag).split("-")[0];
+    const list = voices.filter(v => norm(v.lang).startsWith(base));
+
+    if (!list.length){
+      elVoiceTip.textContent = isIOS
+        ? "اگر تلفظ خوب نیست، ممکن است Voice این زبان روی iPhone نصب نباشد. در Settings → Accessibility → Spoken Content → Voices آن زبان را دانلود کن."
+        : "Voice این زبان روی دستگاه پیدا نشد.";
+      return;
+    }
+
+    elVoiceTip.textContent = "برای تلفظ بهتر، یک صدا را انتخاب کن (روی iPhone خیلی کمک می‌کند).";
+
+    // Add options
+    for (const v of list){
+      const opt = document.createElement("option");
+      opt.value = (v.name||"") + "|" + (v.lang||"");
+      opt.textContent = `${v.name} (${v.lang})${v.default ? " ⭐" : ""}`;
+      elVoiceSelect.appendChild(opt);
+    }
+
+    // restore saved
+    const key = "voice_choice_" + base;
+    const saved = localStorage.getItem(key);
+    if (saved) elVoiceSelect.value = saved;
+  }
+
   speechSynthesis.getVoices();
-  speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
+  speechSynthesis.onvoiceschanged = () => {
+    speechSynthesis.getVoices();
+    fillVoiceSelect();
+  };
 
-  function speak(text, targetLang) {
+  elTarget.addEventListener("change", () => {
+    fillVoiceSelect();
+  });
+
+  elVoiceSelect.addEventListener("change", () => {
+    const target = elTarget.value;
+    const base = norm(getTTSLang(target)).split("-")[0];
+    const key = "voice_choice_" + base;
+    localStorage.setItem(key, elVoiceSelect.value || "");
+  });
+
+  function getChosenVoiceFor(targetLang){
+    const langTag = getTTSLang(targetLang);
+    const base = norm(langTag).split("-")[0];
+    const key = "voice_choice_" + base;
+    const saved = localStorage.getItem(key) || "";
+    if (!saved) return null;
+
+    const [name, lang] = saved.split("|");
+    const voices = getVoicesSafe();
+    return voices.find(v => (v.name===name && v.lang===lang)) || null;
+  }
+
+  function speak(text, targetLang){
     if (!text) return;
-
-    try { speechSynthesis.cancel(); } catch (_) {}
+    try { speechSynthesis.cancel(); } catch(_) {}
 
     const utter = new SpeechSynthesisUtterance(text);
     const ttsLang = getTTSLang(targetLang);
     utter.lang = ttsLang;
 
-    const v = pickBestVoice(ttsLang);
-    if (v) {
-      utter.voice = v;
-    } else {
-      // If voice doesn't exist (common for fa on iOS), show a helpful hint
-      const base = ttsLang.split("-")[0].toLowerCase();
-      if (isIOS && base === "fa") {
-        showHint("برای صدای فارسی در آیفون: Settings → Accessibility → Spoken Content → Voices → Persian را دانلود کن، سپس دوباره امتحان کن.");
-      }
+    // Use user-selected voice first, else best voice
+    const chosen = getChosenVoiceFor(targetLang);
+    if (chosen) utter.voice = chosen;
+    else {
+      const best = pickBestVoice(ttsLang);
+      if (best) utter.voice = best;
+    }
+
+    // Extra hint for Persian on iOS
+    const base = norm(ttsLang).split("-")[0];
+    if (isIOS && base === "fa" && !utter.voice){
+      showHint("برای صدای فارسی در iPhone: Settings → Accessibility → Spoken Content → Voices → Persian را دانلود کن.");
     }
 
     speechSynthesis.speak(utter);
   }
 
-  // --- Translate via Google Translate public endpoint (text only) ---
-  async function translateText(text, target) {
+  // --- Translation ---
+  async function translateText(text, target){
     const res = await fetch(
       "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" +
       target + "&dt=t&q=" + encodeURIComponent(text)
@@ -351,22 +333,26 @@
   elRecordBtn.addEventListener("click", () => {
     unlockAudioOnce();
 
-    if (!recognition) {
-      showHint("تشخیص صدا در این مرورگر/آیفون محدود است. متن را دستی بنویس و «ترجمه متن» را بزن.");
+    if (!recognition){
+      // Important iOS message
+      if (isIOS){
+        showHint("iPhone: برای فارسی روی کادر متن بزن و از میکروفون کیبورد (Dictation) استفاده کن، سپس «ترجمه متن».");
+      } else {
+        showHint("مرورگر شما تشخیص صدا را پشتیبانی نمی‌کند. متن را دستی بنویس.");
+      }
       return;
     }
 
     recognition.lang = elSource.value;
-    showHint("درحال گوش دادن… اگر کار نکرد، متن را دستی بنویس.");
-    try { recognition.start(); } catch (_) {}
+    showHint("درحال گوش دادن…");
+    try { recognition.start(); } catch(_) {}
   });
 
   elTranslateBtn.addEventListener("click", async () => {
     unlockAudioOnce();
-
     const text = (elManual.value || "").trim();
-    if (!text) {
-      showHint("اول یک متن بنویس یا با دکمه «شروع صحبت» صحبت کن.");
+    if (!text){
+      showHint("اول متن بنویس (در iPhone می‌توانی دیکته کنی).");
       return;
     }
 
@@ -379,9 +365,8 @@
     elTranslated.innerText = translated;
     setAudioButtons(!!translated);
 
-    // Android/Desktop: auto speak feels good
     if (!isIOS) speak(translated, target);
-    else showHint("برای شنیدن صدا در آیفون روی «پخش ترجمه» بزن.");
+    else showHint("برای شنیدن صدا در iPhone روی «پخش ترجمه» بزن. برای تلفظ بهتر، یک Voice انتخاب کن.");
   });
 
   elPlayBtn.addEventListener("click", () => {
@@ -391,7 +376,7 @@
   });
 
   elStopBtn.addEventListener("click", () => {
-    try { speechSynthesis.cancel(); } catch (_) {}
+    try { speechSynthesis.cancel(); } catch(_) {}
   });
 
   // --- Service Worker ---
@@ -399,9 +384,12 @@
     navigator.serviceWorker.register("service-worker.js");
   }
 
-  // Initial hint
-  if (isIOS) {
-    showHint("نکته آیفون: برای شنیدن صدا حتماً «پخش ترجمه» را بزن. اگر فارسی صدا ندارد، Persian Voice را از تنظیمات iOS دانلود کن.");
+  // Init
+  setAudioButtons(false);
+  fillVoiceSelect();
+
+  if (isIOS){
+    showHint("iPhone: برای فارسی معمولاً باید از دیکته کیبورد استفاده کنی. برای صدا «پخش ترجمه» را بزن و اگر تلفظ بد بود Voice انتخاب کن.");
   } else {
     showHint("آماده ✅ صحبت کن یا متن بنویس؛ ترجمه انجام می‌شود.");
   }
