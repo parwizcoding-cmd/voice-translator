@@ -12,517 +12,270 @@
       --bg1:#0B1220;
       --bg2:#0E1B2E;
       --card: rgba(255,255,255,0.06);
-      --card2: rgba(255,255,255,0.08);
       --stroke: rgba(255,255,255,0.14);
       --text: rgba(255,255,255,0.92);
       --muted: rgba(255,255,255,0.70);
-      --accent:#7C3AED;   /* purple */
-      --accent2:#22C55E;  /* green */
-      --warn:#F59E0B;
+      --accent:#7C3AED;
+      --accent2:#22C55E;
+      --danger:#EF4444;
     }
-
     *{box-sizing:border-box}
-
     body{
       margin:0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      color: var(--text);
+      font-family:"Segoe UI",Tahoma,sans-serif;
+      color:var(--text);
       min-height:100vh;
       display:flex;
       justify-content:center;
       align-items:center;
       padding:18px;
       background:
-        radial-gradient(900px 500px at 20% 15%, rgba(124,58,237,0.35), transparent 55%),
-        radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,0.25), transparent 55%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
+        radial-gradient(900px 500px at 20% 15%, rgba(124,58,237,.35), transparent 55%),
+        radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.25), transparent 55%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
     }
-
-    .wrap{
-      width:100%;
-      max-width:560px;
-    }
-
+    .wrap{width:100%;max-width:560px}
     .card{
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: 22px;
-      padding: 18px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.45);
-      backdrop-filter: blur(10px);
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:0 25px 60px rgba(0,0,0,.45);
+      backdrop-filter:blur(10px);
     }
-
     .header{
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:12px;
-      margin-bottom: 10px;
-    }
-
-    .title{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      text-align:right;
-    }
-
-    h1{
-      margin:0;
-      font-size: 22px;
-      letter-spacing: .2px;
-    }
-
-    .sub{
-      margin:0;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .pill{
-      display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.88);
-      font-size: 12px;
-      white-space: nowrap;
+      gap:10px;
+      margin-bottom:10px;
     }
-
+    h1{margin:0;font-size:22px}
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    label{
+      font-size:12px;
+      color:var(--muted);
+      display:block;
+      margin-bottom:6px;
+      text-align:center;
+    }
+    select,textarea,button{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(16,23,40,.65);
+      color:var(--text);
+      padding:12px;
+      font-size:15px;
+    }
+    textarea{
+      margin-top:10px;
+      min-height:90px;
+      resize:vertical;
+      text-align:center;
+    }
     .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns:1fr 1fr;
       gap:10px;
-      margin-top: 10px;
     }
-
-    label{
-      display:block;
-      text-align:center;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-      margin-bottom: 6px;
-    }
-
-    select, textarea, button{
-      width:100%;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(16,23,40,0.65);
-      color: var(--text);
-      padding: 12px 12px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    select:focus, textarea:focus{
-      border-color: rgba(124,58,237,0.55);
-      box-shadow: 0 0 0 3px rgba(124,58,237,0.18);
-    }
-
-    textarea{
-      min-height: 92px;
-      resize: vertical;
-      direction: rtl;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .btnRow{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top: 10px;
-    }
-
-    button{
-      cursor:pointer;
-      font-weight: 700;
-      transition: transform .12s ease, filter .12s ease, border-color .12s ease;
-    }
-
-    button:active{ transform: scale(0.98); }
-
-    .primary{
-      background: linear-gradient(135deg, var(--accent), #A78BFA);
-      border-color: rgba(167,139,250,0.35);
-      color: #0B1220;
-    }
-
-    .secondary{
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.14);
-      color: var(--text);
-    }
-
-    .danger{
-      background: rgba(239,68,68,0.10);
-      border-color: rgba(239,68,68,0.35);
-      color: rgba(255,255,255,0.92);
-    }
-
-    button:disabled{
-      opacity:0.55;
-      cursor:not-allowed;
-      transform:none;
-    }
-
     .boxes{
-      margin-top: 12px;
+      margin-top:10px;
       display:grid;
-      grid-template-columns: 1fr;
       gap:10px;
     }
-
     .box{
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      padding: 12px;
-      min-height: 62px;
-      text-align: center;
-      word-break: break-word;
+      min-height:60px;
+      border-radius:16px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
       display:flex;
       align-items:center;
       justify-content:center;
+      text-align:center;
+      padding:12px;
     }
-
+    .btnRow{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    button{
+      cursor:pointer;
+      font-weight:700;
+      transition:transform .12s ease;
+    }
+    button:active{transform:scale(.97)}
+    .primary{
+      background:linear-gradient(135deg,var(--accent),#A78BFA);
+      color:#0B1220;
+    }
+    .secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+    }
+    .danger{
+      background:rgba(239,68,68,.15);
+      color:#fff;
+    }
+    button:disabled{opacity:.55;cursor:not-allowed}
     .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.6;
-      min-height: 18px;
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+      min-height:18px;
     }
-
     .footer{
-      margin-top: 12px;
-      font-size: 12px;
-      color: rgba(255,255,255,0.55);
+      margin-top:12px;
+      font-size:12px;
+      color:rgba(255,255,255,.55);
       text-align:center;
     }
-
-    @media (max-width: 420px){
-      .grid{ grid-template-columns: 1fr; }
-      .btnRow{ grid-template-columns: 1fr; }
+    @media(max-width:420px){
+      .grid,.btnRow{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
 
-      <div class="header">
-        <div class="title">
-          <h1>Voice Translator</h1>
-          <p class="sub">ترجمه صوتی و متنی با طراحی مدرن</p>
-        </div>
-        <div class="pill" id="platformPill">درحال بررسی…</div>
-      </div>
-
-      <div class="grid">
-        <div>
-          <label>زبان ورودی</label>
-          <select id="sourceLang"></select>
-        </div>
-        <div>
-          <label>زبان مقصد</label>
-          <select id="targetLang"></select>
-        </div>
-      </div>
-
-      <textarea id="manualInput" placeholder="متن را اینجا بنویس… (اگر صدا کار نکرد، دستی بنویس)"></textarea>
-
-      <div class="btnRow">
-        <button id="recordBtn" class="primary">🎙 شروع صحبت</button>
-        <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
-      </div>
-
-      <div class="btnRow">
-        <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
-        <button id="stopBtn" class="danger" disabled>⏹ توقف صدا</button>
-      </div>
-
-      <div class="boxes">
-        <div class="box" id="originalText">متن ورودی…</div>
-        <div class="box" id="translatedText">ترجمه…</div>
-      </div>
-
-      <div class="hint" id="hintText"></div>
-      <div class="footer">PWA • Works on Android / iPhone</div>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <h1>Voice Translator</h1>
+      <div class="pill" id="platformPill">...</div>
     </div>
+
+    <!-- Language selectors -->
+    <div class="grid">
+      <div>
+        <label>زبان ورودی</label>
+        <select id="sourceLang"></select>
+      </div>
+      <div>
+        <label>زبان مقصد</label>
+        <select id="targetLang"></select>
+      </div>
+    </div>
+
+    <!-- Output boxes on top -->
+    <div class="boxes">
+      <div class="box" id="originalText">متن ورودی…</div>
+      <div class="box" id="translatedText">ترجمه…</div>
+    </div>
+
+    <!-- Manual input -->
+    <textarea id="manualInput" placeholder="متن را اینجا بنویس…"></textarea>
+
+    <!-- Buttons bottom -->
+    <div class="btnRow">
+      <button id="recordBtn" class="primary">🎙 شروع صحبت</button>
+      <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
+    </div>
+    <div class="btnRow">
+      <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
+      <button id="stopBtn" class="danger" disabled>⏹ توقف صدا</button>
+    </div>
+
+    <div class="hint" id="hintText"></div>
+    <div class="footer">PWA • Android & iPhone</div>
   </div>
+</div>
 
 <script>
-  // --- Detect iOS ---
-  const isIOS = (() => {
-    const ua = navigator.userAgent || "";
-    const iOS = /iPad|iPhone|iPod/.test(ua);
-    const iPadOS = (ua.includes("Mac") && "ontouchend" in document);
-    return iOS || iPadOS;
-  })();
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+document.getElementById("platformPill").textContent = isIOS ? "🍎 iPhone" : "🤖 Android/Desktop";
 
-  const elSource = document.getElementById("sourceLang");
-  const elTarget = document.getElementById("targetLang");
-  const elRecordBtn = document.getElementById("recordBtn");
-  const elTranslateBtn = document.getElementById("translateBtn");
-  const elPlayBtn = document.getElementById("playBtn");
-  const elStopBtn = document.getElementById("stopBtn");
-  const elOriginal = document.getElementById("originalText");
-  const elTranslated = document.getElementById("translatedText");
-  const elManual = document.getElementById("manualInput");
-  const elHint = document.getElementById("hintText");
-  const elPill = document.getElementById("platformPill");
+const LANGS = [
+  {n:"فارسی", tl:"fa", sl:"fa-IR", rtl:true},
+  {n:"English", tl:"en", sl:"en-US"},
+  {n:"Français", tl:"fr", sl:"fr-FR"},
+  {n:"Deutsch", tl:"de", sl:"de-DE"},
+  {n:"Español", tl:"es", sl:"es-ES"},
+  {n:"Italiano", tl:"it", sl:"it-IT"},
+  {n:"Português", tl:"pt", sl:"pt-PT"},
+  {n:"Ελληνικά", tl:"el", sl:"el-GR"},
+  {n:"Русский", tl:"ru", sl:"ru-RU"},
+  {n:"Türkçe", tl:"tr", sl:"tr-TR"},
+  {n:"العربية", tl:"ar", sl:"ar-SA", rtl:true},
+  {n:"日本語", tl:"ja", sl:"ja-JP"},
+  {n:"한국어", tl:"ko", sl:"ko-KR"},
+  {n:"中文", tl:"zh-CN", sl:"zh-CN"},
+];
 
-  elPill.textContent = isIOS ? "🍎 iPhone/iOS" : "🤖 Android/Desktop";
+const source = document.getElementById("sourceLang");
+const target = document.getElementById("targetLang");
+const original = document.getElementById("originalText");
+const translated = document.getElementById("translatedText");
+const manual = document.getElementById("manualInput");
+const playBtn = document.getElementById("playBtn");
+const stopBtn = document.getElementById("stopBtn");
+const hint = document.getElementById("hintText");
 
-  let recognition = null;
-  let lastTranslated = "";
-  let audioUnlocked = false;
+LANGS.forEach(l=>{
+  source.add(new Option(l.n,l.sl));
+  target.add(new Option(l.n,l.tl));
+});
+source.value="fa-IR"; target.value="en";
 
-  function showHint(msg){ elHint.textContent = msg || ""; }
-  function setAudioButtons(hasText){
-    elPlayBtn.disabled = !hasText;
-    elStopBtn.disabled = !hasText;
-  }
+function setDir(){
+  const s = LANGS.find(x=>x.sl===source.value);
+  const t = LANGS.find(x=>x.tl===target.value);
+  manual.style.direction = s?.rtl ? "rtl":"ltr";
+  original.style.direction = s?.rtl ? "rtl":"ltr";
+  translated.style.direction = t?.rtl ? "rtl":"ltr";
+}
+setDir();
+source.onchange=target.onchange=setDir;
 
-  // Big language list
-  const LANGS = [
-    {name:"فارسی", translate:"fa", speech:"fa-IR", rtl:true},
-    {name:"English", translate:"en", speech:"en-US"},
-    {name:"Français", translate:"fr", speech:"fr-FR"},
-    {name:"Deutsch", translate:"de", speech:"de-DE"},
-    {name:"Español", translate:"es", speech:"es-ES"},
-    {name:"Italiano", translate:"it", speech:"it-IT"},
-    {name:"Português", translate:"pt", speech:"pt-PT"},
-    {name:"Русский", translate:"ru", speech:"ru-RU"},
-    {name:"Türkçe", translate:"tr", speech:"tr-TR"},
-    {name:"العربية", translate:"ar", speech:"ar-SA", rtl:true},
-    {name:"اردو", translate:"ur", speech:"ur-PK", rtl:true},
-    {name:"हिन्दी", translate:"hi", speech:"hi-IN"},
-    {name:"বাংলা", translate:"bn", speech:"bn-BD"},
-    {name:"தமிழ்", translate:"ta", speech:"ta-IN"},
-    {name:"తెలుగు", translate:"te", speech:"te-IN"},
-    {name:"한국어", translate:"ko", speech:"ko-KR"},
-    {name:"日本語", translate:"ja", speech:"ja-JP"},
-    {name:"中文 (简体)", translate:"zh-CN", speech:"zh-CN"},
-    {name:"中文 (繁體)", translate:"zh-TW", speech:"zh-TW"},
-    {name:"ไทย", translate:"th", speech:"th-TH"},
-    {name:"Tiếng Việt", translate:"vi", speech:"vi-VN"},
-    {name:"Bahasa Indonesia", translate:"id", speech:"id-ID"},
-    {name:"Nederlands", translate:"nl", speech:"nl-NL"},
-    {name:"Svenska", translate:"sv", speech:"sv-SE"},
-    {name:"Polski", translate:"pl", speech:"pl-PL"},
-    {name:"Ελληνικά", translate:"el", speech:"el-GR"},
-    {name:"עברית", translate:"he", speech:"he-IL", rtl:true},
-    {name:"Română", translate:"ro", speech:"ro-RO"},
-    {name:"Magyar", translate:"hu", speech:"hu-HU"},
-    {name:"Čeština", translate:"cs", speech:"cs-CZ"},
-  ];
+let lastText="";
+async function translateText(text,tl){
+  const r=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`);
+  const j=await r.json();
+  return j[0][0][0];
+}
 
-  function fillLanguageSelects(){
-    elSource.innerHTML = "";
-    elTarget.innerHTML = "";
-    for (const L of LANGS){
-      const o1 = document.createElement("option");
-      o1.value = L.speech;
-      o1.textContent = L.name;
-      elSource.appendChild(o1);
+document.getElementById("translateBtn").onclick=async()=>{
+  const text=manual.value.trim();
+  if(!text){hint.textContent="متن وارد کن";return}
+  original.textContent=text;
+  const out=await translateText(text,target.value);
+  translated.textContent=out;
+  lastText=out;
+  playBtn.disabled=false;
+  stopBtn.disabled=false;
+  hint.textContent=isIOS?"برای صدا روی پخش بزن":"";
+};
 
-      const o2 = document.createElement("option");
-      o2.value = L.translate;
-      o2.textContent = L.name;
-      elTarget.appendChild(o2);
-    }
-    elSource.value = "fa-IR";
-    elTarget.value = "en";
-  }
+function speak(txt,lang){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang=lang;
+  speechSynthesis.speak(u);
+}
+document.getElementById("playBtn").onclick=()=>speak(lastText,target.value);
+document.getElementById("stopBtn").onclick=()=>speechSynthesis.cancel();
 
-  function setDirections(){
-    const src = LANGS.find(x => x.speech === elSource.value);
-    const tgt = LANGS.find(x => x.translate === elTarget.value);
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SR){
+  const rec=new SR();
+  rec.onresult=e=>{
+    const t=e.results[0][0].transcript;
+    manual.value=t;
+  };
+  document.getElementById("recordBtn").onclick=()=>{rec.lang=source.value;rec.start();}
+}else{
+  document.getElementById("recordBtn").onclick=()=>hint.textContent="تشخیص صدا پشتیبانی نمی‌شود";
+}
 
-    const srcRTL = !!src?.rtl;
-    const tgtRTL = !!tgt?.rtl;
-
-    elManual.style.direction = srcRTL ? "rtl" : "ltr";
-    elManual.style.textAlign = "center";
-
-    elOriginal.style.direction = srcRTL ? "rtl" : "ltr";
-    elTranslated.style.direction = tgtRTL ? "rtl" : "ltr";
-  }
-
-  // SpeechRecognition
-  function initRecognition(){
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) return null;
-    const r = new SR();
-    r.continuous = false;
-    r.interimResults = false;
-
-    r.onresult = async (event) => {
-      const text = event.results?.[0]?.[0]?.transcript || "";
-      if (!text.trim()) return;
-
-      elOriginal.innerText = text;
-      elManual.value = text;
-
-      const target = elTarget.value;
-      const translated = await translateText(text, target);
-
-      lastTranslated = translated;
-      elTranslated.innerText = translated;
-      setAudioButtons(!!translated);
-
-      // iOS: don't auto speak
-      if (!isIOS) speak(translated, target);
-      else showHint("برای شنیدن صدا روی «پخش ترجمه» بزن.");
-    };
-
-    r.onerror = () => showHint("تشخیص صدا مشکل دارد. متن را دستی بنویس و «ترجمه متن» را بزن.");
-    return r;
-  }
-  recognition = initRecognition();
-
-  // iOS audio unlock
-  function unlockAudioOnce(){
-    if (audioUnlocked) return;
-    audioUnlocked = true;
-    try{
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(" ");
-      u.volume = 0;
-      speechSynthesis.speak(u);
-      speechSynthesis.cancel();
-    }catch(_){}
-  }
-  ["click","touchend"].forEach(evt => document.addEventListener(evt, unlockAudioOnce, {once:true}));
-
-  // Voice picking (automatic best, no UI)
-  function norm(s){ return (s||"").toLowerCase().replace("_","-"); }
-  function getVoicesSafe(){ try { return speechSynthesis.getVoices() || []; } catch(_) { return []; } }
-
-  function bestVoiceFor(langTag){
-    const voices = getVoicesSafe();
-    if (!voices.length) return null;
-
-    const want = norm(langTag);
-    const base = want.split("-")[0];
-
-    const exact = voices.filter(v => norm(v.lang) === want);
-    const baseMatch = voices.filter(v => norm(v.lang).startsWith(base));
-    const candidates = (exact.length ? exact : baseMatch);
-    if (!candidates.length) return null;
-
-    const score = (v) => {
-      const n = (v.name||"").toLowerCase();
-      let s = 0;
-      if (v.default) s += 50;
-      if (n.includes("enhanced")) s += 18;
-      if (n.includes("premium")) s += 14;
-      if (n.includes("google")) s += 12;
-      if (n.includes("siri")) s += 10;
-      if (n.includes("compact")) s -= 2;
-      return s;
-    };
-    return candidates.slice().sort((a,b)=>score(b)-score(a))[0];
-  }
-
-  speechSynthesis.getVoices();
-  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
-
-  function ttsLangFromTL(tl){
-    const map = {
-      "en":"en-US","fr":"fr-FR","de":"de-DE","es":"es-ES","it":"it-IT","pt":"pt-PT",
-      "ru":"ru-RU","tr":"tr-TR","ar":"ar-SA","fa":"fa-IR","ur":"ur-PK","hi":"hi-IN",
-      "bn":"bn-BD","ta":"ta-IN","te":"te-IN","ko":"ko-KR","ja":"ja-JP","zh-CN":"zh-CN",
-      "zh-TW":"zh-TW","th":"th-TH","vi":"vi-VN","id":"id-ID","nl":"nl-NL","sv":"sv-SE",
-      "pl":"pl-PL","el":"el-GR","he":"he-IL","ro":"ro-RO","hu":"hu-HU","cs":"cs-CZ"
-    };
-    return map[tl] || tl;
-  }
-
-  function speak(text, targetTL){
-    if (!text) return;
-    try { speechSynthesis.cancel(); } catch(_) {}
-
-    const utter = new SpeechSynthesisUtterance(text);
-    const langTag = ttsLangFromTL(targetTL);
-    utter.lang = langTag;
-
-    const v = bestVoiceFor(langTag);
-    if (v) utter.voice = v;
-
-    speechSynthesis.speak(utter);
-  }
-
-  async function translateText(text, target){
-    const res = await fetch(
-      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" +
-      target + "&dt=t&q=" + encodeURIComponent(text)
-    );
-    const data = await res.json();
-    return (data?.[0]?.[0]?.[0] || "").toString();
-  }
-
-  // Buttons
-  elRecordBtn.addEventListener("click", () => {
-    unlockAudioOnce();
-    if (!recognition){
-      showHint("این مرورگر تشخیص صدا را پشتیبانی نمی‌کند. متن را دستی بنویس.");
-      return;
-    }
-    recognition.lang = elSource.value;
-    showHint("درحال گوش دادن…");
-    try { recognition.start(); } catch(_) {}
-  });
-
-  elTranslateBtn.addEventListener("click", async () => {
-    unlockAudioOnce();
-    const text = (elManual.value || "").trim();
-    if (!text){
-      showHint("اول متن بنویس.");
-      return;
-    }
-
-    elOriginal.innerText = text;
-    const target = elTarget.value;
-    const translated = await translateText(text, target);
-
-    lastTranslated = translated;
-    elTranslated.innerText = translated;
-    setAudioButtons(!!translated);
-
-    if (!isIOS) speak(translated, target);
-    else showHint("برای شنیدن صدا روی «پخش ترجمه» بزن.");
-  });
-
-  elPlayBtn.addEventListener("click", () => {
-    unlockAudioOnce();
-    if (!lastTranslated) return;
-    speak(lastTranslated, elTarget.value);
-  });
-
-  elStopBtn.addEventListener("click", () => {
-    try { speechSynthesis.cancel(); } catch(_) {}
-  });
-
-  elSource.addEventListener("change", setDirections);
-  elTarget.addEventListener("change", setDirections);
-
-  // Service Worker
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
-
-  // Init
-  fillLanguageSelects();
-  setDirections();
-  setAudioButtons(false);
-  showHint(isIOS ? "در آیفون برای صدا روی «پخش ترجمه» بزن." : "آماده ✅");
+if("serviceWorker"in navigator)navigator.serviceWorker.register("service-worker.js");
 </script>
 </body>
 </html>
