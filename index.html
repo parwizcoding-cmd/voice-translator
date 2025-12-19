@@ -26,7 +26,7 @@
       border-radius: 20px;
       padding: 25px;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       box-shadow: 0 20px 40px rgba(0,0,0,.5);
       text-align: center;
     }
@@ -37,18 +37,32 @@
       font-size: 26px;
     }
 
-    select, button {
+    select, button, textarea {
       width: 100%;
       padding: 12px;
       margin-top: 10px;
       border-radius: 12px;
       border: none;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
-    select {
+    select, textarea {
       background: #1e1e1e;
       color: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+      direction: rtl;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
     }
 
     button {
@@ -57,6 +71,17 @@
       font-weight: bold;
       cursor: pointer;
       transition: transform .15s ease;
+    }
+
+    button.secondary {
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
 
     button:active {
@@ -70,6 +95,26 @@
       margin-top: 12px;
       min-height: 60px;
       direction: rtl;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 12px;
+      opacity: .8;
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0,230,118,0.12);
+      border: 1px solid rgba(0,230,118,0.35);
+      color: #b9ffd8;
+      font-size: 12px;
+      margin-top: 6px;
     }
 
     footer {
@@ -83,6 +128,7 @@
 
   <div class="card">
     <h1>🎤 مترجم صوتی</h1>
+    <div class="pill" id="platformPill">درحال بررسی دستگاه…</div>
 
     <select id="sourceLang">
       <option value="fa-IR">فارسی</option>
@@ -100,43 +146,189 @@
       <option value="ar">العربية</option>
     </select>
 
-    <button id="recordBtn">🎙 شروع صحبت</button>
+    <!-- Fallback text input (helps iPhone a lot) -->
+    <textarea id="manualInput" placeholder="اگر صدا کار نکرد، متن را اینجا بنویس…"></textarea>
+
+    <div class="row">
+      <button id="recordBtn">🎙 شروع صحبت</button>
+      <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
+    </div>
+
+    <div class="row">
+      <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
+      <button id="stopBtn" class="secondary" disabled>⏹ توقف صدا</button>
+    </div>
 
     <div class="box" id="originalText">متن ورودی…</div>
     <div class="box" id="translatedText">ترجمه…</div>
 
+    <div class="hint" id="hintText"></div>
     <footer>Voice Translator PWA</footer>
   </div>
 
 <script>
-let recognition;
-let userInteracted = false;
+/**
+ * iOS rules:
+ * - SpeechSynthesis often requires a user gesture to start audio.
+ * - SpeechRecognition is limited / often not available.
+ * This code keeps Android working and improves iPhone behavior safely.
+ */
 
-if ('webkitSpeechRecognition' in window) {
-  recognition = new webkitSpeechRecognition();
-  recognition.continuous = false;
-  recognition.interimResults = false;
-} else {
-  alert("مرورگر شما تشخیص صدا را پشتیبانی نمی‌کند");
+const elSource = document.getElementById("sourceLang");
+const elTarget = document.getElementById("targetLang");
+const elRecordBtn = document.getElementById("recordBtn");
+const elTranslateBtn = document.getElementById("translateBtn");
+const elPlayBtn = document.getElementById("playBtn");
+const elStopBtn = document.getElementById("stopBtn");
+const elOriginal = document.getElementById("originalText");
+const elTranslated = document.getElementById("translatedText");
+const elManual = document.getElementById("manualInput");
+const elHint = document.getElementById("hintText");
+const elPill = document.getElementById("platformPill");
+
+let recognition = null;
+let lastTranslated = "";
+let audioUnlocked = false;
+
+const isIOS = (() => {
+  const ua = navigator.userAgent || "";
+  const iOS = /iPad|iPhone|iPod/.test(ua);
+  const iPadOS = (ua.includes("Mac") && "ontouchend" in document);
+  return iOS || iPadOS;
+})();
+
+elPill.textContent = isIOS ? "🍎 iPhone/iOS" : "🤖 Android/Desktop";
+
+function showHint(msg) {
+  elHint.textContent = msg || "";
 }
 
-document.getElementById("recordBtn").onclick = () => {
-  userInteracted = true;
-  const src = document.getElementById("sourceLang").value;
+function setButtonsForAudio(hasText) {
+  elPlayBtn.disabled = !hasText;
+  elStopBtn.disabled = !hasText;
+}
+
+function getTTSLang(target) {
+  const map = { fa: "fa-IR", en: "en-US", de: "de-DE", tr: "tr-TR", ar: "ar-SA" };
+  return map[target] || target;
+}
+
+// Try to create SpeechRecognition (Android/Chrome usually)
+function initRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+
+  const r = new SR();
+  r.continuous = false;
+  r.interimResults = false;
+
+  r.onresult = async (event) => {
+    const text = event.results?.[0]?.[0]?.transcript || "";
+    if (!text.trim()) return;
+
+    elOriginal.innerText = text;
+    elManual.value = text; // keep same in textarea too
+
+    const target = elTarget.value;
+    const translated = await translateText(text, target);
+
+    lastTranslated = translated;
+    elTranslated.innerText = translated;
+    setButtonsForAudio(!!translated);
+
+    // IMPORTANT: iOS often blocks auto speak.
+    // So we do NOT auto-play. User taps "Play" to hear.
+    if (!isIOS) {
+      // On Android/desktop, auto speak is usually OK and feels better
+      speak(translated, target);
+    } else {
+      showHint("در آیفون، برای شنیدن صدا حتماً روی «پخش ترجمه» بزن.");
+    }
+  };
+
+  r.onerror = () => {
+    showHint("مشکل در تشخیص صدا. می‌توانی متن را دستی بنویسی و «ترجمه متن» را بزنی.");
+  };
+
+  r.onend = () => {};
+
+  return r;
+}
+
+recognition = initRecognition();
+
+// Unlock audio on first user gesture (helps iOS a lot)
+function unlockAudioOnUserGesture() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  // Some iOS versions need a speak/cancel sequence after a user action
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(" ");
+    u.volume = 0; // silent
+    speechSynthesis.speak(u);
+    speechSynthesis.cancel();
+  } catch (_) {}
+
+  showHint(isIOS
+    ? "صدا فعال شد ✅ حالا برای شنیدن ترجمه روی «پخش ترجمه» بزن."
+    : "آماده است ✅");
+}
+
+// Any click/tap in the app unlocks audio once
+["click", "touchend"].forEach(evt => {
+  document.addEventListener(evt, unlockAudioOnUserGesture, { once: true });
+});
+
+elRecordBtn.addEventListener("click", () => {
+  unlockAudioOnUserGesture();
+
+  if (!recognition) {
+    // iOS fallback
+    showHint("تشخیص صدا در این مرورگر/آیفون پشتیبانی نمی‌شود. متن را دستی بنویس و «ترجمه متن» را بزن.");
+    return;
+  }
+
+  const src = elSource.value;
   recognition.lang = src;
-  recognition.start();
-};
 
-recognition.onresult = async (event) => {
-  const text = event.results[0][0].transcript;
-  document.getElementById("originalText").innerText = text;
+  showHint("درحال گوش دادن… اگر کار نکرد، متن را دستی بنویس.");
+  try { recognition.start(); } catch (_) {}
+});
 
-  const target = document.getElementById("targetLang").value;
+elTranslateBtn.addEventListener("click", async () => {
+  unlockAudioOnUserGesture();
+
+  const text = (elManual.value || "").trim();
+  if (!text) {
+    showHint("اول یک متن بنویس یا با دکمه «شروع صحبت» صحبت کن.");
+    return;
+  }
+
+  elOriginal.innerText = text;
+
+  const target = elTarget.value;
   const translated = await translateText(text, target);
 
-  document.getElementById("translatedText").innerText = translated;
-  speak(translated, target);
-};
+  lastTranslated = translated;
+  elTranslated.innerText = translated;
+  setButtonsForAudio(!!translated);
+
+  // On iOS: do NOT auto speak, user taps Play
+  if (!isIOS) speak(translated, target);
+  else showHint("برای شنیدن صدا، روی «پخش ترجمه» بزن.");
+});
+
+elPlayBtn.addEventListener("click", () => {
+  unlockAudioOnUserGesture();
+  const target = elTarget.value;
+  if (lastTranslated) speak(lastTranslated, target);
+});
+
+elStopBtn.addEventListener("click", () => {
+  try { speechSynthesis.cancel(); } catch (_) {}
+});
 
 async function translateText(text, target) {
   const res = await fetch(
@@ -146,31 +338,33 @@ async function translateText(text, target) {
       encodeURIComponent(text)
   );
   const data = await res.json();
-  return data[0][0][0];
+  return (data?.[0]?.[0]?.[0] || "").toString();
 }
 
 function speak(text, lang) {
-  if (!userInteracted) return;
+  if (!text) return;
 
-  speechSynthesis.cancel();
+  try { speechSynthesis.cancel(); } catch (_) {}
+
   const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = getTTSLang(lang);
 
-  const map = {
-    fa: "fa-IR",
-    en: "en-US",
-    de: "de-DE",
-    tr: "tr-TR",
-    ar: "ar-SA"
-  };
-
-  utter.lang = map[lang] || lang;
+  // iOS voice list sometimes loads late; speaking still works after unlock in many cases
   speechSynthesis.speak(utter);
 }
 
 // Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+
+// Initial hints
+if (isIOS) {
+  showHint("نکته آیفون: تشخیص صدا (خصوصاً فارسی) ممکن است محدود باشد. اگر صدا کار نکرد، متن را دستی بنویس. برای شنیدن ترجمه حتماً «پخش ترجمه» را بزن.");
+} else {
+  showHint("آماده ✅ صحبت کن؛ ترجمه و صدا انجام می‌شود.");
 }
 </script>
 </body>
 </html>
+
