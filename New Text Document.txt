@@ -1,22 +1,2 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Privacy Policy</title>
-</head>
-<body>
 
-<h1>Privacy Policy – Voice Translator</h1>
 
-<p>This app uses the microphone only to translate your voice.</p>
-
-<p>No voice data is stored.</p>
-<p>No personal data is collected.</p>
-<p>No data is shared with anyone.</p>
-
-<p>This app is safe and respects user privacy.</p>
-
-<p>Contact email: parwizcoding@gmail.com</p>
-
-</body>
-</html>
