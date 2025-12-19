@@ -18,5 +18,22 @@
     }
   ]
 }
+// دکمه حذف متن (نسخه امن)
+const clearBtn = document.getElementById("clearBtn");
+
+if (clearBtn) {
+  clearBtn.onclick = () => {
+    try { speechSynthesis.cancel(); } catch (_) {}
+
+    o.textContent = "متن ورودی…";
+    tr.textContent = "ترجمه…";
+    m.value = "";
+    last = "";
+
+    play.disabled = true;
+    hint.textContent = "";
+  };
+}
+
 
 
