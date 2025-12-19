@@ -92,57 +92,77 @@
 <body>
 
 <div class="wrap">
-  <div class="card">
+<div class="card">
 
-    <div class="topbar">
-      <div class="logoLeft">PZ</div>
-      <h1>Voice Translator</h1>
-      <div></div>
-    </div>
-
-    <div class="grid">
-      <div>
-        <label>زبان ورودی</label>
-        <select id="sourceLang"></select>
-      </div>
-      <div>
-        <label>زبان مقصد</label>
-        <select id="targetLang"></select>
-      </div>
-    </div>
-
-    <div class="boxes">
-      <div class="box" id="originalText">متن ورودی…</div>
-      <div class="box" id="translatedText">ترجمه…</div>
-    </div>
-
-    <textarea id="manualInput" placeholder="متن را اینجا بنویس…"></textarea>
-
-    <div class="btnRow">
-      <button id="recordBtn" class="primary">🎙 شروع صحبت</button>
-      <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
-    </div>
-
-    <div class="btnRow">
-      <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
-      <button id="stopBtn" class="danger" disabled>⏹ توقف صدا</button>
-    </div>
-
-    <!-- ✅ دکمه جدید -->
-    <div class="btnRow">
-      <button id="clearTextBtn" class="danger">🧹 پاک‌کردن متن‌ها</button>
-    </div>
-
-    <div class="hint" id="hintText"></div>
+  <div class="topbar">
+    <div class="logoLeft">PZ</div>
+    <h1>Voice Translator</h1>
+    <div></div>
   </div>
+
+  <div class="grid">
+    <div>
+      <label>زبان ورودی</label>
+      <select id="sourceLang"></select>
+    </div>
+    <div>
+      <label>زبان مقصد</label>
+      <select id="targetLang"></select>
+    </div>
+  </div>
+
+  <div class="boxes">
+    <div class="box" id="originalText">متن ورودی…</div>
+    <div class="box" id="translatedText">ترجمه…</div>
+  </div>
+
+  <textarea id="manualInput" placeholder="متن را اینجا بنویس…"></textarea>
+
+  <div class="btnRow">
+    <button id="recordBtn" class="primary">🎙 شروع صحبت</button>
+    <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
+  </div>
+
+  <div class="btnRow">
+    <button id="playBtn" class="secondary" disabled>🔊 پخش ترجمه</button>
+    <button id="stopBtn" class="danger" disabled>⏹ توقف صدا</button>
+  </div>
+
+  <!-- فقط همین دکمه اضافه شده -->
+  <div class="btnRow">
+    <button id="clearTextBtn" class="danger">🧹 پاک‌کردن متن‌ها</button>
+  </div>
+
+  <div class="hint" id="hintText"></div>
+
+</div>
 </div>
 
 <script>
 const LANGS=[
-  {n:"فارسی",tl:"fa",sl:"fa-IR"},
-  {n:"English",tl:"en",sl:"en-US"},
-  {n:"Deutsch",tl:"de",sl:"de-DE"},
-  {n:"Français",tl:"fr",sl:"fr-FR"}
+ {n:"فارسی",tl:"fa",sl:"fa-IR",rtl:true},
+ {n:"English",tl:"en",sl:"en-US"},
+ {n:"Français",tl:"fr",sl:"fr-FR"},
+ {n:"Deutsch",tl:"de",sl:"de-DE"},
+ {n:"Español",tl:"es",sl:"es-ES"},
+ {n:"Italiano",tl:"it",sl:"it-IT"},
+ {n:"Português",tl:"pt",sl:"pt-PT"},
+ {n:"Ελληνικά",tl:"el",sl:"el-GR"},
+ {n:"Русский",tl:"ru",sl:"ru-RU"},
+ {n:"Türkçe",tl:"tr",sl:"tr-TR"},
+ {n:"العربية",tl:"ar",sl:"ar-SA",rtl:true},
+ {n:"اردو",tl:"ur",sl:"ur-PK",rtl:true},
+ {n:"हिन्दी",tl:"hi",sl:"hi-IN"},
+ {n:"বাংলা",tl:"bn",sl:"bn-BD"},
+ {n:"ไทย",tl:"th",sl:"th-TH"},
+ {n:"Tiếng Việt",tl:"vi",sl:"vi-VN"},
+ {n:"Bahasa Indonesia",tl:"id",sl:"id-ID"},
+ {n:"Nederlands",tl:"nl",sl:"nl-NL"},
+ {n:"Svenska",tl:"sv",sl:"sv-SE"},
+ {n:"Polski",tl:"pl",sl:"pl-PL"},
+ {n:"日本語",tl:"ja",sl:"ja-JP"},
+ {n:"한국어",tl:"ko",sl:"ko-KR"},
+ {n:"中文",tl:"zh-CN",sl:"zh-CN"}
 ];
 
 const s=sourceLang, t=targetLang;
@@ -186,14 +206,19 @@ play.onclick=()=>{
 };
 stop.onclick=()=>speechSynthesis.cancel();
 
+/* 🎙 VOICE – دقیقاً مثل نسخه اول */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(SR){
   const rec=new SR();
+  rec.continuous=false;
+  rec.interimResults=false;
   rec.onresult=e=>runTranslate(e.results[0][0].transcript);
   recordBtn.onclick=()=>{rec.lang=s.value;rec.start();}
+}else{
+  hint.textContent="مرورگر شما از تشخیص صدا پشتیبانی نمی‌کند";
 }
 
-/* ✅ فقط پاک کردن متن‌ها – صدا دست نخورده */
+/* 🧹 فقط پاک کردن متن‌ها */
 clearTextBtn.onclick=()=>{
   o.textContent="متن ورودی…";
   tr.textContent="ترجمه…";
@@ -201,5 +226,6 @@ clearTextBtn.onclick=()=>{
   last="";
 };
 </script>
+
 </body>
 </html>
