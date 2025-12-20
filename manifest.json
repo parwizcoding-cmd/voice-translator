@@ -1,20 +1,23 @@
 {
   "name": "Voice Translator",
   "short_name": "Translator",
-  "start_url": "./",
+  "description": "Voice Translator PWA",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#121212",
-  "theme_color": "#00E676",
+  "background_color": "#0B1220",
+  "theme_color": "#0B1220",
   "icons": [
     {
-      "src": "https://i.ibb.co/HT6qkFTX/icon192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/VYrmdr5c/icon512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
