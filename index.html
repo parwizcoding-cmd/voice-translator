@@ -205,11 +205,14 @@
                 <div></div>
             </div>
 
-            <div class="grid">
-                <select id="sourceLang"></select>
-                <select id="targetLang"></select>
-            </div>
-            <button id="swapBtn" class="secondary">🔄 جابجایی زبان‌ها</button>
+          <div class="langRow">
+    <select id="sourceLang"></select>
+
+    <div id="swapBtn" class="swapIcon">🔄</div>
+
+    <select id="targetLang"></select>
+</div>
+
 
 
             <div class="box" id="translatedText">ترجمه…</div>
@@ -411,12 +414,35 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 });
+        
+.langRow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.swapIcon {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    transition: transform .2s ease;
+}
+
+.swapIcon:active {
+    transform: rotate(180deg);
+}
 
     </script>
 
 </body>
 
 </html>
+
 
 
 
