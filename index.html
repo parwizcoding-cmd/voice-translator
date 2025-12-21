@@ -4,8 +4,21 @@
 <head>
     <meta charset="UTF-8" />
     <title>Voice Translator</title>
+
+    <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Theme -->
     <meta name="theme-color" content="#0B1220">
+
+    <!-- ✅ PWA Manifest (Android) -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- ✅ iOS (iPhone / iPad) -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Voice Translator">
 
     <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -13,6 +26,7 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc =
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
     </script>
+
 
     <!-- OCR -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -372,3 +386,4 @@
 </body>
 
 </html>
+
