@@ -180,18 +180,6 @@
                 grid-template-columns: 1fr
             }
         }
-        @media (min-width: 768px) {
-    .wrap {
-        max-width: 720px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .wrap {
-        max-width: 860px;
-    }
-}
-
     </style>
 </head>
 
@@ -205,15 +193,10 @@
                 <div></div>
             </div>
 
-          <div class="langRow">
-    <select id="sourceLang"></select>
-
-    <div id="swapBtn" class="swapIcon">🔄</div>
-
-    <select id="targetLang"></select>
-</div>
-
-
+            <div class="grid">
+                <select id="sourceLang"></select>
+                <select id="targetLang"></select>
+            </div>
 
             <div class="box" id="translatedText">ترجمه…</div>
 
@@ -233,7 +216,7 @@
                 <button id="clearBtn" class="danger">🧹 پاک‌کردن</button>
             </div>
 
-            <input type="file" id="fileInput" accept=".txt,.pdf,image/*" hidden>
+            <input type="file" id="fileInput" accept=".txt,.pdf,image/*" capture="environment" hidden>
 
             <div class="hint" id="hintText"></div>
 
@@ -398,51 +381,8 @@
             tr.textContent = "ترجمه…";
             allowSpeak = true;
         };
-        /* ===== SWAP LANGUAGES ===== */
-document.addEventListener("DOMContentLoaded", () => {
-
-    const swapBtn = document.getElementById("swapBtn");
-
-    swapBtn.onclick = () => {
-        const temp = s.value;
-        s.value = t.value;
-        t.value = temp;
-
-        if (m.value.trim()) {
-            runTranslate(m.value);
-        }
-    };
-
-});
-        
-.langRow {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 8px;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.swapIcon {
-    cursor: pointer;
-    font-size: 20px;
-    padding: 10px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.15);
-    transition: transform .2s ease;
-}
-
-.swapIcon:active {
-    transform: rotate(180deg);
-}
-
     </script>
 
 </body>
 
 </html>
-
-
-
-
