@@ -1,4 +1,4 @@
-const CACHE_NAME = 'voice-translator-cache-v6';
+const CACHE_NAME = 'voice-translator-cache-v7';
 
 const urlsToCache = [
     './',
@@ -29,5 +29,6 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request).then((cached) => cached || fetch(event.request))
     );
 });
+
 
 
