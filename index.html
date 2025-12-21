@@ -396,21 +396,27 @@
             allowSpeak = true;
         };
         /* ===== SWAP LANGUAGES ===== */
-const swapBtn = document.getElementById("swapBtn");
+document.addEventListener("DOMContentLoaded", () => {
 
-swapBtn.onclick = () => {
-    const temp = s.value;
-    s.value = t.value;
-    t.value = temp;
+    const swapBtn = document.getElementById("swapBtn");
 
-    if (m.value.trim()) {
-        runTranslate(m.value);
-    }
-};
+    swapBtn.onclick = () => {
+        const temp = s.value;
+        s.value = t.value;
+        t.value = temp;
+
+        if (m.value.trim()) {
+            runTranslate(m.value);
+        }
+    };
+
+});
+
     </script>
 
 </body>
 
 </html>
+
 
 
