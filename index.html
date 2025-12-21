@@ -1,389 +1,173 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Voice Translator</title>
+<meta charset="UTF-8" />
+<title>Voice Translator</title>
 
-    <!-- Viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B1220">
 
-    <!-- Theme -->
-    <meta name="theme-color" content="#0B1220">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
 
-    <!-- ✅ PWA Manifest (Android) -->
-    <link rel="manifest" href="manifest.json">
+<!-- iOS -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Voice Translator">
 
-    <!-- ✅ iOS (iPhone / iPad) -->
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Voice Translator">
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+ "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+</script>
 
-    <!-- PDF.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-    </script>
+<!-- OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-
-    <!-- OCR -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
-    <style>
-        :root {
-            --bg1: #0B1220;
-            --bg2: #0E1B2E;
-            --card: rgba(255, 255, 255, .06);
-            --stroke: rgba(255, 255, 255, .14);
-            --text: rgba(255, 255, 255, .92);
-            --muted: rgba(255, 255, 255, .7);
-            --accent: #7C3AED;
-            --danger: #EF4444;
-        }
-
-        * {
-            box-sizing: border-box
-        }
-
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Tahoma, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 18px;
-            color: var(--text);
-            background:
-                radial-gradient(900px 500px at 20% 15%, rgba(124, 58, 237, .35), transparent 55%),
-                radial-gradient(900px 500px at 80% 20%, rgba(34, 197, 94, .25), transparent 55%),
-                linear-gradient(135deg, var(--bg1), var(--bg2));
-        }
-
-        .wrap {
-            width: 100%;
-            max-width: 560px
-        }
-
-        .card {
-            background: var(--card);
-            border: 1px solid var(--stroke);
-            border-radius: 22px;
-            padding: 22px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, .45);
-            backdrop-filter: blur(10px);
-            text-align: center;
-        }
-
-        .topbar {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .logoLeft {
-            font-size: 30px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #7C3AED, #22C55E);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 800
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px
-        }
-
-        select,
-        textarea,
-        button {
-            width: 100%;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            background: rgba(16, 23, 40, .65);
-            color: var(--text);
-            padding: 12px;
-            font-size: 15px;
-        }
-
-        textarea {
-            margin-top: 10px;
-            min-height: 90px;
-            resize: vertical;
-            text-align: center;
-        }
-
-        .box {
-            margin-top: 12px;
-            height: 90px;
-            overflow-y: auto;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .12);
-            padding: 12px;
-            text-align: right;
-            line-height: 1.6;
-            word-break: break-word;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-        }
-
-        .btnRow {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 12px
-        }
-
-        button {
-            cursor: pointer;
-            font-weight: 700
-        }
-
-        .primary {
-            background: linear-gradient(135deg, var(--accent), #A78BFA);
-            color: #0B1220
-        }
-
-        .secondary {
-            background: rgba(255, 255, 255, .06)
-        }
-
-        .danger {
-            background: rgba(239, 68, 68, .18)
-        }
-
-        .hint {
-            margin-top: 10px;
-            font-size: 12px;
-            color: var(--muted)
-        }
-
-        @media(max-width:420px) {
-
-            .grid,
-            .btnRow {
-                grid-template-columns: 1fr
-            }
-        }
-    </style>
+<style>
+:root{
+ --bg1:#0B1220; --bg2:#0E1B2E;
+ --card:rgba(255,255,255,.06);
+ --stroke:rgba(255,255,255,.14);
+ --text:rgba(255,255,255,.92);
+ --muted:rgba(255,255,255,.7);
+ --accent:#7C3AED;
+ --danger:#EF4444;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:"Segoe UI",Tahoma,sans-serif;
+ min-height:100vh;display:flex;
+ justify-content:center;align-items:center;
+ padding:18px;color:var(--text);
+ background:
+  radial-gradient(900px 500px at 20% 15%, rgba(124,58,237,.35), transparent 55%),
+  radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.25), transparent 55%),
+  linear-gradient(135deg,var(--bg1),var(--bg2));
+}
+.wrap{width:100%;max-width:560px}
+.card{
+ background:var(--card);
+ border:1px solid var(--stroke);
+ border-radius:22px;
+ padding:22px;
+ box-shadow:0 25px 60px rgba(0,0,0,.45);
+ backdrop-filter:blur(10px);
+ text-align:center;
+}
+.topbar{
+ display:grid;
+ grid-template-columns:auto 1fr auto;
+ align-items:center;
+ margin-bottom:10px;
+}
+.logoLeft{
+ font-size:30px;font-weight:900;
+ background:linear-gradient(135deg,#7C3AED,#22C55E);
+ -webkit-background-clip:text;
+ -webkit-text-fill-color:transparent;
+}
+h1{margin:0;font-size:20px;font-weight:800}
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;margin-top:10px
+}
+select,textarea,button{
+ width:100%;
+ border-radius:14px;
+ border:1px solid rgba(255,255,255,.12);
+ background:rgba(16,23,40,.65);
+ color:var(--text);
+ padding:12px;font-size:15px;
+}
+textarea{
+ margin-top:10px;
+ min-height:90px;
+ resize:vertical;
+ text-align:center;
+}
+.box{
+ margin-top:12px;
+ height:90px;
+ overflow-y:auto;
+ border-radius:16px;
+ background:rgba(255,255,255,.06);
+ border:1px solid rgba(255,255,255,.12);
+ padding:12px;
+ line-height:1.6;
+ word-break:break-word;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+}
+.btnRow{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;margin-top:12px
+}
+button{cursor:pointer;font-weight:700}
+.primary{
+ background:linear-gradient(135deg,var(--accent),#A78BFA);
+ color:#0B1220
+}
+.secondary{background:rgba(255,255,255,.06)}
+.danger{background:rgba(239,68,68,.18)}
+@media(max-width:420px){
+ .grid,.btnRow{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="card">
+<div class="wrap">
+<div class="card">
 
-            <div class="topbar">
-                <div class="logoLeft">PZ</div>
-                <h1>Voice Translator</h1>
-                <div></div>
-            </div>
+<div class="topbar">
+ <div class="logoLeft">PZ</div>
+ <h1>Voice Translator</h1>
+ <div></div>
+</div>
 
-            <div class="grid">
-                <select id="sourceLang"></select>
-                <select id="targetLang"></select>
-            </div>
+<div class="grid">
+ <select id="sourceLang"></select>
+ <select id="targetLang"></select>
+</div>
 
-            <div class="box" id="translatedText">ترجمه…</div>
+<div class="box" id="translatedText">ترجمه…</div>
 
-            <textarea id="manualInput" placeholder="متن را اینجا بنویس…"></textarea>
+<textarea id="manualInput" placeholder="متن را اینجا بنویس…"></textarea>
 
-            <div class="btnRow">
-                <button id="recordBtn" class="primary">🎙 شروع صحبت</button>
-                <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
-            </div>
+<div class="btnRow">
+ <button id="recordBtn" class="primary">🎙 شروع صحبت</button>
+ <button id="translateBtn" class="secondary">🔁 ترجمه متن</button>
+</div>
 
-            <div class="btnRow">
-                <button id="fileBtn" class="secondary">📎 افزودن فایل / دوربین</button>
-                <button id="stopVoiceBtn" class="secondary">⏹ توقف خواندن</button>
-            </div>
+<div class="btnRow">
+ <button id="fileBtn" class="secondary">📎 افزودن فایل / دوربین</button>
+ <button id="stopVoiceBtn" class="secondary">⏹ توقف خواندن</button>
+</div>
 
-            <div class="btnRow">
-                <button id="clearBtn" class="danger">🧹 پاک‌کردن</button>
-            </div>
+<div class="btnRow">
+ <button id="clearBtn" class="danger">🧹 پاک‌کردن</button>
+</div>
 
-            <input type="file" id="fileInput" accept=".txt,.pdf,image/*" capture="environment" hidden>
+<!-- ✅ اینجا مهم است: capture حذف شده -->
+<input type="file" id="fileInput"
+       accept=".txt,.pdf,image/*"
+       hidden>
 
-            <div class="hint" id="hintText"></div>
+</div>
+</div>
 
-        </div>
-    </div>
-
-    <script>
-        /* ===== LANGUAGES (30) ===== */
-        const LANGS = [
-            { f: "🇮🇷", n: "فارسی", sl: "fa-IR", tl: "fa" },
-            { f: "🇺🇸", n: "English (US)", sl: "en-US", tl: "en" },
-            { f: "🇬🇧", n: "English (UK)", sl: "en-GB", tl: "en" },
-            { f: "🇸🇦", n: "العربية", sl: "ar-SA", tl: "ar" },
-            { f: "🇹🇷", n: "Türkçe", sl: "tr-TR", tl: "tr" },
-            { f: "🇩🇪", n: "Deutsch", sl: "de-DE", tl: "de" },
-            { f: "🇫🇷", n: "Français", sl: "fr-FR", tl: "fr" },
-            { f: "🇪🇸", n: "Español", sl: "es-ES", tl: "es" },
-            { f: "🇮🇹", n: "Italiano", sl: "it-IT", tl: "it" },
-            { f: "🇵🇹", n: "Português", sl: "pt-PT", tl: "pt" },
-            { f: "🇧🇷", n: "Português (BR)", sl: "pt-BR", tl: "pt" },
-            { f: "🇷🇺", n: "Русский", sl: "ru-RU", tl: "ru" },
-            { f: "🇨🇳", n: "中文", sl: "zh-CN", tl: "zh-CN" },
-            { f: "🇯🇵", n: "日本語", sl: "ja-JP", tl: "ja" },
-            { f: "🇰🇷", n: "한국어", sl: "ko-KR", tl: "ko" },
-            { f: "🇮🇳", n: "हिन्दी", sl: "hi-IN", tl: "hi" },
-            { f: "🇵🇰", n: "اردو", sl: "ur-PK", tl: "ur" },
-            { f: "🇦🇫", n: "پشتو", sl: "ps-AF", tl: "ps" },
-            { f: "🇬🇷", n: "Ελληνικά", sl: "el-GR", tl: "el" },
-            { f: "🇳🇱", n: "Nederlands", sl: "nl-NL", tl: "nl" },
-            { f: "🇸🇪", n: "Svenska", sl: "sv-SE", tl: "sv" },
-            { f: "🇵🇱", n: "Polski", sl: "pl-PL", tl: "pl" },
-            { f: "🇹🇭", n: "ไทย", sl: "th-TH", tl: "th" },
-            { f: "🇻🇳", n: "Tiếng Việt", sl: "vi-VN", tl: "vi" },
-            { f: "🇮🇩", n: "Bahasa Indonesia", sl: "id-ID", tl: "id" },
-            { f: "🇲🇾", n: "Bahasa Melayu", sl: "ms-MY", tl: "ms" },
-            { f: "🇺🇦", n: "Українська", sl: "uk-UA", tl: "uk" },
-            { f: "🇮🇱", n: "עברית", sl: "he-IL", tl: "he" },
-            { f: "🇷🇴", n: "Română", sl: "ro-RO", tl: "ro" },
-            { f: "🇨🇿", n: "Čeština", sl: "cs-CZ", tl: "cs" }
-        ];
-
-        const s = sourceLang, t = targetLang;
-        const m = manualInput, tr = translatedText;
-        LANGS.forEach(l => {
-            s.add(new Option(`${l.f} ${l.n}`, l.sl));
-            t.add(new Option(`${l.f} ${l.n}`, l.tl));
-        });
-        s.value = "fa-IR"; t.value = "en";
-
-        /* ===== SPEAK CONTROL ===== */
-        let allowSpeak = true;
-
-        /* ===== TRANSLATE ===== */
-        async function translateText(text, tl) {
-            const r = await fetch(
-                `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
-            );
-            const j = await r.json();
-            return j?.[0]?.[0]?.[0] || "";
-        }
-        function speak(text, lang) {
-            if (!allowSpeak) return;
-            try { speechSynthesis.cancel() } catch (e) { }
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = lang;
-            speechSynthesis.speak(u);
-        }
-        async function runTranslate(text) {
-            if (!text.trim()) return;
-            tr.textContent = "⏳ در حال ترجمه...";
-            const out = await translateText(text, t.value);
-            tr.textContent = out;
-            speak(out, t.value);
-        }
-
-        /* ===== BUTTONS ===== */
-        translateBtn.onclick = () => {
-            allowSpeak = true;
-            runTranslate(m.value);
-        };
-        stopVoiceBtn.onclick = () => {
-            allowSpeak = false;
-            try { speechSynthesis.cancel() } catch (e) { }
-        };
-
-        /* ===== VOICE ===== */
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SR) {
-            const rec = new SR();
-            rec.onresult = e => {
-                allowSpeak = true;
-                m.value = e.results[0][0].transcript;
-                runTranslate(m.value);
-            };
-            recordBtn.onclick = () => {
-                rec.lang = s.value;
-                rec.start();
-            };
-        }
-
-        /* ===== FILE / CAMERA / OCR ===== */
-        fileBtn.onclick = () => fileInput.click();
-
-        fileInput.onchange = async () => {
-            const file = fileInput.files[0];
-            if (!file) return;
-            allowSpeak = true;
-
-            // IMAGE OCR (Camera + Auto Language)
-            if (file.type.startsWith("image/")) {
-                tr.textContent = "📷 OCR در حال پردازش...";
-                const res = await Tesseract.recognize(
-                    file,
-                    "eng+fas+ara+urd+ps+fra+deu+spa+ita+por+rus+tur+ell",
-                    {
-                        logger: m => {
-                            if (m.status === "recognizing text") {
-                                tr.textContent = `📷 OCR: ${Math.round(m.progress * 100)}٪`;
-                            }
-                        }
-                    }
-                );
-                const text = res.data.text.trim();
-                if (text) {
-                    m.value = text;
-                    runTranslate(text);
-                } else tr.textContent = "❌ متنی پیدا نشد";
-            }
-
-            // PDF
-            else if (file.type === "application/pdf") {
-                tr.textContent = "📄 در حال خواندن PDF...";
-                const r = new FileReader();
-                r.onload = async () => {
-                    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(r.result) }).promise;
-                    let text = "";
-                    for (let i = 1; i <= pdf.numPages; i++) {
-                        const p = await pdf.getPage(i);
-                        const c = await p.getTextContent();
-                        c.items.forEach(it => text += it.str + " ");
-                    }
-                    m.value = text;
-                    runTranslate(text);
-                };
-                r.readAsArrayBuffer(file);
-            }
-
-            // TXT
-            else {
-                const r = new FileReader();
-                r.onload = e => {
-                    m.value = e.target.result;
-                    runTranslate(m.value);
-                };
-                r.readAsText(file);
-            }
-        };
-
-        /* ===== CLEAR ===== */
-        clearBtn.onclick = () => {
-            m.value = "";
-            tr.textContent = "ترجمه…";
-            allowSpeak = true;
-        };
-    </script>
+<script>
+if("serviceWorker" in navigator){
+ navigator.serviceWorker.register("service-worker.js");
+}
+</script>
 
 </body>
-
 </html>
-
