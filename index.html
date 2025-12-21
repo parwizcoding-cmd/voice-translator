@@ -209,6 +209,8 @@
                 <select id="sourceLang"></select>
                 <select id="targetLang"></select>
             </div>
+            <button id="swapBtn" class="secondary">🔄 جابجایی زبان‌ها</button>
+
 
             <div class="box" id="translatedText">ترجمه…</div>
 
@@ -393,9 +395,22 @@
             tr.textContent = "ترجمه…";
             allowSpeak = true;
         };
+        /* ===== SWAP LANGUAGES ===== */
+const swapBtn = document.getElementById("swapBtn");
+
+swapBtn.onclick = () => {
+    const temp = s.value;
+    s.value = t.value;
+    t.value = temp;
+
+    if (m.value.trim()) {
+        runTranslate(m.value);
+    }
+};
     </script>
 
 </body>
 
 </html>
+
 
